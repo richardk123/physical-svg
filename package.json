@@ -1,20 +1,31 @@
 {
   "name": "physical-svg",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "description": "Library to animate svg image path based on 2d physics",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "build": "tsc",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
     "test": "jest --config jestconfig.json"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/richardk123/physical-svg.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "svg",
+    "physics",
+    "font"
+  ],
+  "author": "Richard Kolisek",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/richardk123/physical-svg/issues"
@@ -31,5 +42,7 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "dependencies": {
+  }
 }
