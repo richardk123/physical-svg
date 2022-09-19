@@ -1,5 +1,5 @@
 import {Aggregator} from "../agregator/aggregator";
-import {CollisionAggregator} from "../agregator/collision/collision_aggregator";
+import {CollisionAggregator} from "../agregator/collision_aggregator";
 import {NoAggregator} from "../agregator/no_aggregator";
 import {StarterBuilder} from "./starter_builder";
 

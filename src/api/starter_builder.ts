@@ -1,9 +1,9 @@
 import {AggregatorBuilder} from "./aggregator_builder";
 import {expandCommands} from "../base/command_mapper";
 import {makeAbsolute, parseSVG} from "svg-path-parser";
-import {CollisionAggregator} from "../agregator/collision/collision_aggregator";
+import {CollisionAggregator} from "../agregator/collision_aggregator";
 import {DebugRenderer} from "../renderer/debug-renderer";
-import {mapCommandsToShape} from "../base/shape_mapper";
+import {mapCommandsToShape} from "../base/shape/shape_mapper";
 import {SvgData} from "../base/svg_data";
 
 export class StarterBuilder
@@ -30,7 +30,7 @@ export class StarterBuilder
         const shapes = mapCommandsToShape(allCommands, new SvgData(1));
         const aggregatedShapes = new CollisionAggregator().aggregate(shapes);
 
-        const renderer = new DebugRenderer(svg, pathCommandArray, shapes);
+        const renderer = new DebugRenderer(svg, pathCommandArray, aggregatedShapes);
         renderer.render(0);
     }
 }

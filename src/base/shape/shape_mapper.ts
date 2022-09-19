@@ -1,14 +1,15 @@
 import {
-    Command,
+    Command, CurveToCommandMadeAbsolute,
     LineToCommandMadeAbsolute, MoveToCommandMadeAbsolute
 } from "svg-path-parser";
-import {Shape} from "./shape/shape";
-import {Line} from "./command_mapper";
-import {LineShape} from "./shape/line_shape";
-import {SvgData} from "./svg_data";
-import {PointShape} from "./shape/point_shape";
+import {Shape} from "./shape";
+import {Line} from "../command_mapper";
+import {LineShape} from "./line_shape";
+import {SvgData} from "../svg_data";
+import {PointShape} from "./point_shape";
+import {CurveShape} from "./curve_shape";
 
-export const mapCommandsToShape = (commands: Command[], svgData: SvgData): Shape[] =>
+export const mapCommandsToShape = (commands: Command[], svgData: SvgData): Shape<Command>[] =>
 {
     return commands
         .filter(command =>
@@ -28,6 +29,11 @@ export const mapCommandsToShape = (commands: Command[], svgData: SvgData): Shape
                 {
                     const line = command as LineToCommandMadeAbsolute;
                     return new LineShape(line, svgData);
+                }
+                case 'C':
+                {
+                    const curve = command as CurveToCommandMadeAbsolute;
+                    return new CurveShape(curve, svgData);
                 }
                 default:
                 {

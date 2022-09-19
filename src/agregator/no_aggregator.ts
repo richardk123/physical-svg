@@ -4,9 +4,8 @@ import {Shape} from "../base/shape/shape";
 
 export class NoAggregator implements Aggregator
 {
-    aggregate(shapes: Shape[]): Shape[][]
+    aggregate(shapes: Shape<Command>[]): Shape<Command>[][]
     {
         return shapes.map(shape => [shape]);
     }
-
 }

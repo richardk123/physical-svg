@@ -1,21 +1,33 @@
-import {Command, LineToCommandMadeAbsolute, MoveToCommandMadeAbsolute} from "svg-path-parser";
+import {
+    Command,
+    CurveToCommandMadeAbsolute,
+    LineToCommandMadeAbsolute,
+    MoveToCommandMadeAbsolute
+} from "svg-path-parser";
 import {Shape} from "../base/shape/shape";
+import {DummyPhysics} from "../physics/dummy_physics";
 
 export class DebugRenderer implements Renderer
 {
     private _prevTime = 0;
     private _pathCommands: Command[][];
-    private _shapes: Shape[];
+    private _shapes: Shape<Command>[][];
+    private _svgClone: HTMLElement;
     private _svgPaths: SVGPathElement[];
+    private _physics: DummyPhysics;
 
-    constructor(svg: HTMLElement, pathCommands: Command[][], shapes: Shape[])
+    constructor(svg: HTMLElement, pathCommands: Command[][], shapes: Shape<Command>[][])
     {
         this._pathCommands = pathCommands;
+        this._shapes = shapes;
+
+        this._physics = new DummyPhysics();
 
         const svgClone = svg.cloneNode(true) as HTMLElement;
         svgClone.id = svgClone.id + "1";
+        this._svgClone = svgClone;
+
         svg.parentElement!.append(svgClone);
-        this._shapes = shapes;
         this._svgPaths = Array.prototype.slice.call(svgClone.getElementsByTagName('path'));
     }
 
@@ -23,26 +35,69 @@ export class DebugRenderer implements Renderer
     {
         this._prevTime = time;
 
-        // todo: physics with aggregated shapes
-        this._shapes.forEach(shape =>
-        {
-            switch (shape.code)
-            {
-                case 'M':
-                {
-                    const cmd = shape.command as MoveToCommandMadeAbsolute;
-                    cmd.x = cmd.x + 1;
-                }
-            }
-        })
+        // clear debug
+        const circles = Array.prototype.slice.call(this._svgClone.getElementsByTagName("circle"));
+        circles.forEach(circle => this._svgClone.removeChild(circle));
+
+        this._physics.update(this._shapes);
 
         this._pathCommands.forEach((commands: Command[], index: number) =>
         {
             const pathString = commands.map(commandSerializer).join(" ");
             this._svgPaths[index].setAttribute("d", pathString);
-        })
+        });
+
+        this._pathCommands.forEach((commands: Command[]) =>
+        {
+            commands.forEach(command => commandDebugRenderer(command, this._svgClone));
+        });
+
         window.requestAnimationFrame((t) => this.render(t));
     }
+}
+
+const commandDebugRenderer = (command: Command, svg: HTMLElement): void =>
+{
+    switch (command.code)
+    {
+        case 'M':
+        {
+            pointRenderer({x: command.x, y: command.y}, svg, "red");
+            break;
+        }
+        case 'L':
+        {
+            pointRenderer({x: command.x, y: command.y}, svg, "black");
+            break;
+        }
+        case 'C':
+        {
+            pointRenderer({x: command.x, y: command.y}, svg, "red");
+            pointRenderer({x: command.x1, y: command.y1}, svg, "purple");
+            pointRenderer({x: command.x2, y: command.y2}, svg, "purple");
+            break;
+        }
+        case 'Z':
+        {
+            break;
+        }
+        default:
+        {
+            throw new Error(`no debug renderer found for ${command.code}`);
+        }
+    }
+}
+
+const pointRenderer = (point: {x: number, y: number}, svg: HTMLElement, color: string): void =>
+{
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", point.x.toFixed(2));
+    circle.setAttribute("cy", point.y.toFixed(2));
+    circle.setAttribute("r", "1.5");
+    circle.setAttribute("stroke", "black");
+    circle.setAttribute("stroke-width", "0");
+    circle.setAttribute("fill", color);
+    svg.appendChild(circle);
 }
 
 const commandSerializer = (command: Command): string =>
@@ -62,6 +117,11 @@ const commandSerializer = (command: Command): string =>
         case 'Z':
         {
             return "Z";
+        }
+        case 'C':
+        {
+            const curve = command as CurveToCommandMadeAbsolute;
+            return `C ${curve.x1.toFixed(2)} ${curve.y1.toFixed(2)} ${curve.x2.toFixed(2)} ${curve.y2.toFixed(2)}  ${curve.x.toFixed(2)} ${curve.y.toFixed(2)}`
         }
         default:
         {

@@ -1,17 +1,16 @@
-import {LineToCommandMadeAbsolute} from "svg-path-parser";
 import {Vector2d} from "../../base/vector2d";
 import {Intersector} from "./Intersector";
 import {LineShape} from "../../base/shape/line_shape";
 
-export class LineSegmentIntersector implements Intersector<LineShape, LineShape>
+export class LineLineIntersector implements Intersector<LineShape, LineShape>
 {
-    intersects(cmd1: LineShape, cmd2: LineShape): boolean
+    intersects(shape1: LineShape, shape2: LineShape): boolean
     {
-        const p1 = new Vector2d(cmd1.x, cmd1.y);
-        const p2 = new Vector2d(cmd1.x0, cmd1.y0);
+        const p1 = new Vector2d(shape1.command.x, shape1.command.y);
+        const p2 = new Vector2d(shape1.command.x0, shape1.command.y0);
 
-        const q1 = new Vector2d(cmd2.x, cmd2.y);
-        const q2 = new Vector2d(cmd2.x0, cmd2.y0);
+        const q1 = new Vector2d(shape2.command.x, shape2.command.y);
+        const q2 = new Vector2d(shape2.command.x0, shape2.command.y0);
 
         const r = p2.deduct(p1);
         const s = q2.deduct(q1);

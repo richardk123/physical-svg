@@ -1,48 +1,48 @@
-import {LineSegmentIntersector} from "../agregator/collision/line_segment_intersector";
 import {Line} from "../base/command_mapper";
 import {LineShape} from "../base/shape/line_shape";
 import {SvgData} from "../base/svg_data";
+import {LineLineIntersector} from "../agregator/collision/line_line_intersector";
 
-test('test parallel lines', () =>
+test('parallel lines', () =>
 {
     const l1 = createLine(0, 0, 5, 0);
     const l2 = createLine(0, 1, 5, 1);
-    expect(new LineSegmentIntersector().intersects(l1, l2)).toBe(false);
+    expect(new LineLineIntersector().intersects(l1, l2)).toBe(false);
 });
 
-test('test perpendicular lines intersect', () =>
+test('perpendicular lines intersect', () =>
 {
     const l1 = createLine(-5, 0, 5, 0);
     const l2 = createLine(0, -5, 5, 5);
-    expect(new LineSegmentIntersector().intersects(l1, l2)).toBe(true);
+    expect(new LineLineIntersector().intersects(l1, l2)).toBe(true);
 });
 
-test('test perpendicular lines not intersect', () =>
+test('perpendicular lines not intersect', () =>
 {
     const l1 = createLine(-5, 0, 5, 0);
     const l2 = createLine(0, 1, 5, 5);
-    expect(new LineSegmentIntersector().intersects(l1, l2)).toBe(false);
+    expect(new LineLineIntersector().intersects(l1, l2)).toBe(false);
 });
 
-test('test lines not intersect', () =>
+test('lines not intersect', () =>
 {
     const l1 = createLine(0, 0, 5, 5);
     const l2 = createLine(2, 3, 3, 5);
-    expect(new LineSegmentIntersector().intersects(l1, l2)).toBe(false);
+    expect(new LineLineIntersector().intersects(l1, l2)).toBe(false);
 });
 
-test('test lines intersect', () =>
+test('lines intersect', () =>
 {
     const l1 = createLine(0, 0, 5, 5);
     const l2 = createLine(3, 5, 5, 1);
-    expect(new LineSegmentIntersector().intersects(l1, l2)).toBe(true);
+    expect(new LineLineIntersector().intersects(l1, l2)).toBe(true);
 });
 
-test('test lines intersect in one point', () =>
+test('lines intersect in one point', () =>
 {
     const l1 = createLine(0, 0, 5, 0);
     const l2 = createLine(3, 0, 3, 5);
-    expect(new LineSegmentIntersector().intersects(l1, l2)).toBe(true);
+    expect(new LineLineIntersector().intersects(l1, l2)).toBe(true);
 });
 
 export const createLine = (x: number, y: number, x0: number, y0: number) =>

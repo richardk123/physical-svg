@@ -80,6 +80,11 @@ export class Vector2d
         return this._x + "_" + this._y;
     }
 
+    public static random(): Vector2d
+    {
+        return new Vector2d(Math.random(), Math.random());
+    }
+
     public static fromString(key: string): Vector2d
     {
         const split = key.split("_");

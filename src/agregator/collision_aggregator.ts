@@ -1,24 +1,29 @@
-import {Intersector} from "./intersector";
+import {Intersector} from "./collision/intersector";
 import {Command} from "svg-path-parser";
-import {Aggregator} from "../aggregator";
-import {LineSegmentIntersector} from "./line_segment_intersector";
-import {AggregationTree} from "./tree/aggregation_tree";
-import {Shape} from "../../base/shape/shape";
-import {LineSegmentPointIntersector} from "./line_segment_point_intersector";
+import {Aggregator} from "./aggregator";
+import {LineLineIntersector} from "./collision/line_line_intersector";
+import {AggregationTree} from "./collision/tree/aggregation_tree";
+import {Shape} from "../base/shape/shape";
+import {LinePointIntersector} from "./collision/line_point_intersector";
+import {LineCurveIntersector} from "./collision/line_curve_intersector";
+import {CurveCurveIntersector} from "./collision/curve_curve_intersector";
+import {CurvePointIntersector} from "./collision/curve_point_intersector";
+import {PointPointIntersector} from "./collision/point_point_intersector";
 
 export class CollisionAggregator implements Aggregator
 {
-    private _intersectorRegistry: Intersector<Shape, Shape>[];
+    private _intersectorRegistry: Intersector<Shape<Command>, Shape<Command>>[];
 
     constructor()
     {
-        this._intersectorRegistry = [new LineSegmentIntersector(), new LineSegmentPointIntersector()];
+        this._intersectorRegistry = [new LineLineIntersector(), new LinePointIntersector(),
+            new LineCurveIntersector(), new CurveCurveIntersector(), new CurvePointIntersector(), new PointPointIntersector()];
     }
 
     // aggregate commands together if they intersect
-    aggregate(shapes: Shape[]): Shape[][]
+    aggregate(shapes: Shape<Command>[]): Shape<Command>[][]
     {
-        const aggregationTree = new AggregationTree<Shape>(
+        const aggregationTree = new AggregationTree<Shape<Command>>(
             (shape1, shape2) => this.intersect(shape1, shape2, this._intersectorRegistry));
 
         shapes.forEach(shape =>
@@ -30,7 +35,7 @@ export class CollisionAggregator implements Aggregator
     }
 
     // find intersector for two commands and call it
-    intersect(shape1: Shape, shape2: Shape, registry: Intersector<Shape, Shape>[]): boolean
+    intersect(shape1: Shape<Command>, shape2: Shape<Command>, registry: Intersector<Shape<Command>, Shape<Command>>[]): boolean
     {
         const matchingIntersector = registry.find(intersector =>
         {

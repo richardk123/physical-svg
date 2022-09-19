@@ -1,11 +1,11 @@
 import {SvgData} from "../svg_data";
 import {Command} from "svg-path-parser";
 
-export interface Shape
+export interface Shape<T extends Command>
 {
-    get code(): string;
+    code: 'M' | 'L' | 'C';
 
     get svgData(): SvgData
 
-    get command(): Command;
+    get command(): T;
 }

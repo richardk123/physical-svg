@@ -1,7 +1,7 @@
 import {
     ClosePathCommandMadeAbsolute,
     Command, HorizontalLineToCommandMadeAbsolute,
-    LineToCommandMadeAbsolute,
+    LineToCommandMadeAbsolute, MoveToCommandMadeAbsolute,
     VerticalLineToCommandMadeAbsolute
 } from "svg-path-parser";
 
@@ -33,7 +33,7 @@ export const expandCommands = (commands: Command[]): Command[] =>
 
 export class Line implements LineToCommandMadeAbsolute
 {
-    code: "L";
+    code: 'L';
     command: "lineto";
     relative: false;
     x: number;
@@ -43,7 +43,7 @@ export class Line implements LineToCommandMadeAbsolute
 
     constructor(x: number, y: number, x0: number, y0: number)
     {
-        this.code = "L";
+        this.code = 'L';
         this.relative = false;
         this.command = "lineto";
         this.x = x;

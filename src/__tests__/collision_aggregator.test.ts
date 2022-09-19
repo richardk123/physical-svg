@@ -1,6 +1,6 @@
 import {Line} from "../base/command_mapper";
-import {CollisionAggregator} from "../agregator/collision/collision_aggregator";
-import {mapCommandsToShape} from "../base/shape_mapper";
+import {CollisionAggregator} from "../agregator/collision_aggregator";
+import {mapCommandsToShape} from "../base/shape/shape_mapper";
 import {SvgData} from "../base/svg_data";
 
 test('test parallel lines', () =>

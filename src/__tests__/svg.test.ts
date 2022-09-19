@@ -1,47 +1,59 @@
 import {expandCommands} from "../base/command_mapper";
 import {Command, makeAbsolute, parseSVG} from "svg-path-parser";
-import {CollisionAggregator} from "../agregator/collision/collision_aggregator";
-import {mapCommandsToShape} from "../base/shape_mapper";
+import {CollisionAggregator} from "../agregator/collision_aggregator";
+import {mapCommandsToShape} from "../base/shape/shape_mapper";
 import {SvgData} from "../base/svg_data";
 import {Shape} from "../base/shape/shape";
 
 test('square from LHV', () =>
 {
-    const aggregatedCommands = createHtmlAndParse(
+    const aggregatedShapes = createHtmlAndParse(
         '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">' +
                 '<path d="M 10 10 H 90 V 90 H 10 L 10 10"/>' +
               '</svg>'
     );
 
-    expect(aggregatedCommands.length).toBe(1);
-    expect(aggregatedCommands[0].length).toBe(5);
+    expect(aggregatedShapes.length).toBe(1);
+    expect(aggregatedShapes[0].length).toBe(5);
 });
 
 test('square from LHVZ', () =>
 {
-    const aggregatedCommands = createHtmlAndParse(
+    const aggregatedShapes = createHtmlAndParse(
         '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">' +
                 '<path d="M 10 10 H 90 V 90 H 10 Z" fill="transparent" stroke="black"/>' +
               '</svg>'
     );
 
-    expect(aggregatedCommands.length).toBe(1);
-    expect(aggregatedCommands[0].length).toBe(4);
+    expect(aggregatedShapes.length).toBe(1);
+    expect(aggregatedShapes[0].length).toBe(4);
+});
+
+test('square from LHVZ relative', () =>
+{
+    const aggregatedShapes = createHtmlAndParse(
+        '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">' +
+                '<path d="M225 3v65h-9.5V3h9.5z" fill="transparent" stroke="black"/>' +
+              '</svg>'
+    );
+
+    expect(aggregatedShapes.length).toBe(1);
+    expect(aggregatedShapes[0].length).toBe(5);
 });
 
 // test('bezier CS', () =>
 // {
-//     const aggregatedCommands = createHtmlAndParse(
+//     const aggregatedShapes = createHtmlAndParse(
 //         '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">' +
 //                 '<path d="M 10 80 C 40 10, 65 10, 95 80 S 150 150, 180 80" stroke="black" fill="transparent"/>' +
 //               '</svg>'
 //     );
 //
-//     expect(aggregatedCommands.length).toBe(1);
-//     expect(aggregatedCommands[0].length).toBe(1);
+//     expect(aggregatedShapes.length).toBe(1);
+//     expect(aggregatedShapes[0].length).toBe(1);
 // });
 
-const createHtmlAndParse = (html: string): Shape[][] =>
+const createHtmlAndParse = (html: string): Shape<Command>[][] =>
 {
     document.body.innerHTML = html;
 
