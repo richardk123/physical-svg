@@ -1,4 +1,4 @@
-import {Vector2d} from "../base/vector2d";
+import {Vector2d} from "./vector2d";
 
 export class RelativeMousePosition
 {
@@ -16,9 +16,9 @@ export class RelativeMousePosition
 
     get position(): Vector2d
     {
-        let rect = this._element.getBoundingClientRect();
-        let x = this._mousePosition.x - rect.left; //x position within the element.
-        let y = this._mousePosition.y - rect.top;  //y position within the element.
+        const rect = this._element.getBoundingClientRect();
+        const x = this._mousePosition.x - rect.left; // x position within the element.
+        const y = this._mousePosition.y - rect.top;  // y position within the element.
 
         return new Vector2d(x, y);
     }

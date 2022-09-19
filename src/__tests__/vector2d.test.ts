@@ -1,4 +1,4 @@
-import { findAngle, Vector2d } from "../base/vector2d";
+import { Vector2d } from "../base/vector2d";
 
 test('create vector', () => 
 {
@@ -89,29 +89,4 @@ test('vector toString', () =>
 {
   const vector = Vector2d.fromString("1_2");
   expect(vector.equals(new Vector2d(1, 2))).toBe(true);
-});
-
-test('point bellowLine line', () => 
-{
-  const aboveLine = new Vector2d(0, 5).isAboveLine(new Vector2d(0, 0), new Vector2d(10, 0));
-  expect(aboveLine).toBe(false);
-});
-
-test('point above line', () => 
-{
-  const aboveLine = new Vector2d(0, -5).isAboveLine(new Vector2d(0, 0), new Vector2d(10, 0));
-  expect(aboveLine).toBe(true);
-});
-
-test('rotate points around pivot', () => 
-{
-  const rotatedPoint = new Vector2d(0, -5).rotateAroundPivot(new Vector2d(0, 0), Math.PI / 2);
-  expect(rotatedPoint.x).toBeCloseTo(5);
-  expect(rotatedPoint.y).toBeCloseTo(0);
-});
-
-test('find angle', () => 
-{
-  const angle = findAngle(new Vector2d(-5, 0), new Vector2d(0, 0), new Vector2d(0, 5));
-  expect(angle).toBeCloseTo(Math.PI / 2);
 });

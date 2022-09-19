@@ -35,6 +35,11 @@ export class Vector2d
         return new Vector2d(this.x * length, this.y * length);
     }
 
+    public multiplyV(v: Vector2d): Vector2d
+    {
+        return new Vector2d(this.x * v.x, this.y * v.y);
+    }
+
     public divide(length: number): Vector2d
     {
         return new Vector2d(this.x / length, this.y / length);
@@ -70,21 +75,6 @@ export class Vector2d
         return (this.x * p.y) - (this.y * p.x)
     }
 
-    public isAboveLine(l1: Vector2d, l2: Vector2d)
-    {
-        const v1 = l2.deduct(l1);
-        const v2 = l2.deduct(this);
-        const cross = v1.crossProduct(v2);
-        return cross > 0;
-    }
-
-    public rotateAroundPivot(pivot: Vector2d, angle: number)
-    {
-        return new Vector2d(
-            Math.cos(angle) * (this.x - pivot.x) - Math.sin(angle) * (this.y - pivot.y) + pivot.x, 
-            Math.sin(angle) * (this.x - pivot.x) + Math.cos(angle) * (this.y - pivot.y) + pivot.y);
-    }
-
     public toString(): string
     {
         return this._x + "_" + this._y;
@@ -96,18 +86,3 @@ export class Vector2d
         return new Vector2d(Number(split[0]), Number(split[1]));
     }
 }
-
-export const findAngle = (A: Vector2d, B: Vector2d, C: Vector2d)  =>
-{
-    var AB = Math.sqrt(Math.pow(B.x-A.x,2)+ Math.pow(B.y-A.y,2));
-    var BC = Math.sqrt(Math.pow(B.x-C.x,2)+ Math.pow(B.y-C.y,2));
-    var AC = Math.sqrt(Math.pow(C.x-A.x,2)+ Math.pow(C.y-A.y,2));
-
-    const result = Math.acos((BC*BC+AB*AB-AC*AC)/(2*BC*AB));
-
-    if (isNaN(result))
-    {
-        return 0;
-    }
-    return result;
-};
