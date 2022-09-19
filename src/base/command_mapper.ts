@@ -6,13 +6,9 @@ import {
 } from "svg-path-parser";
 
 // expand shorten line commands to full line commands
-export const mapAndFilterCommands = (commands: Command[]): Command[] =>
+export const expandCommands = (commands: Command[]): Command[] =>
 {
     return commands
-        .filter(command =>
-        {
-            return "MALHVZTQSC".includes(command.code)
-        })
         .map(command =>
         {
             switch (command.code)
@@ -26,11 +22,6 @@ export const mapAndFilterCommands = (commands: Command[]): Command[] =>
                 {
                     const vLine = command as VerticalLineToCommandMadeAbsolute;
                     return new Line(vLine.x, vLine.y, vLine.x0, vLine.y0);
-                }
-                case 'Z':
-                {
-                    const closeLine = command as ClosePathCommandMadeAbsolute;
-                    return new Line(closeLine.x, closeLine.y, closeLine.x0, closeLine.y0);
                 }
                 default:
                 {

@@ -1,4 +1,4 @@
-import {mapAndFilterCommands} from "../base/command_mapper";
+import {expandCommands} from "../base/command_mapper";
 import {Command, makeAbsolute, parseSVG} from "svg-path-parser";
 import {CollisionAggregator} from "../agregator/collision/collision_aggregator";
 import {mapCommandsToShape} from "../base/shape_mapper";
@@ -26,7 +26,7 @@ test('square from LHVZ', () =>
     );
 
     expect(aggregatedCommands.length).toBe(1);
-    expect(aggregatedCommands[0].length).toBe(5);
+    expect(aggregatedCommands[0].length).toBe(4);
 });
 
 // test('bezier CS', () =>
@@ -51,7 +51,7 @@ const createHtmlAndParse = (html: string): Shape[][] =>
         .map(path =>
         {
             const absoluteCommands = makeAbsolute(parseSVG(path.getAttribute("d")));
-            const filteredCommands = mapAndFilterCommands(absoluteCommands);
+            const filteredCommands = expandCommands(absoluteCommands);
             return mapCommandsToShape(filteredCommands, new SvgData(1));
         })
         .flatMap(cmdArray => cmdArray);

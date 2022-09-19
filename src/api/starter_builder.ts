@@ -1,5 +1,5 @@
 import {AggregatorBuilder} from "./aggregator_builder";
-import {mapAndFilterCommands} from "../base/command_mapper";
+import {expandCommands} from "../base/command_mapper";
 import {makeAbsolute, parseSVG} from "svg-path-parser";
 import {CollisionAggregator} from "../agregator/collision/collision_aggregator";
 import {DebugRenderer} from "../renderer/debug-renderer";
@@ -18,23 +18,19 @@ export class StarterBuilder
     start(): void
     {
         const svg = this._aggregatorBuilder._svg;
+        const paths = Array.prototype.slice.call(svg.getElementsByTagName('path'));
 
-        const paths = svg.getElementsByTagName('path');
-        const pathArray = Array.prototype.slice.call(paths);
+        const pathCommandArray = paths
+            .map(path => path.getAttribute("d"))
+            .map(pathString => expandCommands(makeAbsolute(parseSVG(pathString))));
 
-        const commands = pathArray
-            .map(path =>
-            {
-                const commandsAbsolute = makeAbsolute(parseSVG(path.getAttribute("d")));
-                const filteredCommands = mapAndFilterCommands(commandsAbsolute);
-                return mapCommandsToShape(filteredCommands, new SvgData(1));
-            })
-            .flatMap(cmdArray => cmdArray);
+        const allCommands = pathCommandArray
+            .flatMap(commands => commands);
 
-        const aggregatedCommands = new CollisionAggregator().aggregate(commands);
+        const shapes = mapCommandsToShape(allCommands, new SvgData(1));
+        const aggregatedShapes = new CollisionAggregator().aggregate(shapes);
 
-        const renderer = new DebugRenderer(svg);
-
+        const renderer = new DebugRenderer(svg, pathCommandArray, shapes);
         renderer.render(0);
     }
 }
