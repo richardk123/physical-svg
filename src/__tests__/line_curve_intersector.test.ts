@@ -28,7 +28,7 @@ test('curve line intersect in middle', () =>
     expect(new LineCurveIntersector().intersects(curve, line)).toBe(true);
 });
 
-export const createCurve = (x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, x: number, y: number) =>
+export const createCurve = (x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, x: number, y: number): CurveShape =>
 {
     return new CurveShape(new Curve(x0, y0, x1, y1, x2, y2, x, y), new SvgData(1));
 }
@@ -61,5 +61,4 @@ export class Curve implements CurveToCommandMadeAbsolute
         this.x = x;
         this.y = y;
     }
-
 }

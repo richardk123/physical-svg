@@ -6,12 +6,12 @@ import {StarterBuilder} from "./starter_builder";
 export class AggregatorBuilder
 {
     _svg: HTMLElement;
-    _aggregator: Aggregator | undefined;
+    _aggregator: Aggregator
 
     constructor(svg: HTMLElement)
     {
         this._svg = svg;
-        this._aggregator = undefined;
+        this._aggregator = new CollisionAggregator();
     }
 
     useCollisionAggregator(): StarterBuilder

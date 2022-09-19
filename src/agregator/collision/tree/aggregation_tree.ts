@@ -42,13 +42,14 @@ export class AggregationTree<T>
                 nodesCollided.slice(1, nodesCollided.length)
                     .map(node => node.getRoot())
                     .filter(root => root.id !== addedNode.getRoot().id)
-                    .filter((value, index, self) =>
-                            index === self.findIndex((t) => (t.id === value.id))
+                    .filter((node, index, self) =>
+                            index === self.findIndex((t) => (t.id === node.id))
                     )
                     .forEach(root =>
                     {
                         addedNode.addChildNode(root);
-                    })
+                        this._roots.splice(this._roots.indexOf(root), 1);
+                    });
             }
         }
     }
