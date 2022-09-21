@@ -26,7 +26,9 @@ export class StarterBuilder
         const allCommands = pathCommandArray
             .flatMap(commands => commands);
 
-        const shapes = mapCommandsToShape(allCommands, new SvgData(1));
+        // TODO:
+        const strokeWidth = +svg.getAttribute("stroke-width")!.replace("px","")
+        const shapes = mapCommandsToShape(allCommands, new SvgData(strokeWidth));
         const aggregatedShapes = this._aggregatorBuilder._aggregator.aggregate(shapes);
 
         const renderer = new DebugRenderer(svg, pathCommandArray, aggregatedShapes);

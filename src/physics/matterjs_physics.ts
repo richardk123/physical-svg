@@ -31,7 +31,8 @@ export class MatterJsPhysics implements Physics
 
         aggregatedShapes.forEach(shapes =>
         {
-            this._bodies = shapes.map(shape => physBodyFactory(shape));
+            const aggregatedBodies = shapes.map(shape => physBodyFactory(shape));
+            this._bodies = this._bodies.concat(aggregatedBodies);
 
             const midX = shapes
                 .map(shape => shape.center.x)
@@ -41,7 +42,7 @@ export class MatterJsPhysics implements Physics
                 .reduce((acc, cur) => acc + cur) / shapes.length;
 
             const aggregatedBody = Bodies.circle(midX, midY, 300);
-            Body.setParts(aggregatedBody, this._bodies.map(physBody => physBody.body), false);
+            Body.setParts(aggregatedBody, aggregatedBodies.map(physBody => physBody.body), false);
             World.add(this._world, aggregatedBody);
         })
 
