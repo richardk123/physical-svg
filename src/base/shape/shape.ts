@@ -8,4 +8,7 @@ export interface Shape<T extends Command>
     get svgData(): SvgData
 
     get command(): T;
+
+    // center point of the shape
+    get center(): {x: number, y: number};
 }

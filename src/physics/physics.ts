@@ -3,5 +3,8 @@ import {Command} from "svg-path-parser";
 
 export interface Physics
 {
-    update(aggregatedShapes: Shape<Command>[][]) : void;
+
+    init(aggregatedShapes: Shape<Command>[][]): void;
+
+    update(aggregatedShapes: Shape<Command>[][], deltaTime: number) : void;
 }

@@ -17,11 +17,20 @@ export class DummyPhysics implements Physics
         this._directionMap = new Map<number, Vector2d>();
     }
 
-    update(aggregatedShapes: Shape<Command>[][]): void
+    init(aggregatedShapes: Shape<Command>[][]): void
     {
         aggregatedShapes.forEach((shapes, index) =>
         {
-            const direction = this.getDirectionForIndex(index);
+            const vec = Vector2d.random().multiply(0.1);
+            this._directionMap.set(index, vec);
+        })
+    }
+
+    update(aggregatedShapes: Shape<Command>[][], deltaTime: number): void
+    {
+        aggregatedShapes.forEach((shapes, index) =>
+        {
+            const direction = this._directionMap.get(index)!;
             shapes.forEach(shape =>
             {
                 switch (shape.command.code)
@@ -58,18 +67,4 @@ export class DummyPhysics implements Physics
             });
         });
     }
-
-    private getDirectionForIndex(index: number): Vector2d
-    {
-        let result = this._directionMap.get(index);
-
-        if (result === undefined)
-        {
-            result = Vector2d.random().multiply(0.1);
-            this._directionMap.set(index, result);
-        }
-
-        return result;
-    }
-
 }

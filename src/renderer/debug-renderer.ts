@@ -5,7 +5,8 @@ import {
     MoveToCommandMadeAbsolute
 } from "svg-path-parser";
 import {Shape} from "../base/shape/shape";
-import {DummyPhysics} from "../physics/dummy_physics";
+import {Physics} from "../physics/physics";
+import {MatterJsPhysics} from "../physics/matterjs_physics";
 
 export class DebugRenderer implements Renderer
 {
@@ -14,14 +15,15 @@ export class DebugRenderer implements Renderer
     private _shapes: Shape<Command>[][];
     private _svgClone: HTMLElement;
     private _svgPaths: SVGPathElement[];
-    private _physics: DummyPhysics;
+    private _physics: Physics;
 
     constructor(svg: HTMLElement, pathCommands: Command[][], shapes: Shape<Command>[][])
     {
         this._pathCommands = pathCommands;
         this._shapes = shapes;
 
-        this._physics = new DummyPhysics();
+        this._physics = new MatterJsPhysics();
+        this._physics.init(shapes);
 
         const svgClone = svg.cloneNode(true) as HTMLElement;
         svgClone.id = svgClone.id + "1";
@@ -39,42 +41,42 @@ export class DebugRenderer implements Renderer
         const circles = Array.prototype.slice.call(this._svgClone.getElementsByTagName("circle"));
         circles.forEach(circle => this._svgClone.removeChild(circle));
 
-        this._physics.update(this._shapes);
+        this._physics.update(this._shapes, time);
 
         this._pathCommands.forEach((commands: Command[], index: number) =>
         {
-            const pathString = commands.map(commandSerializer).join(" ");
+            const pathString = commands.map(serializeCommand).join(" ");
             this._svgPaths[index].setAttribute("d", pathString);
         });
 
         this._pathCommands.forEach((commands: Command[]) =>
         {
-            commands.forEach(command => commandDebugRenderer(command, this._svgClone));
+            commands.forEach(command => debugRender(command, this._svgClone));
         });
 
         window.requestAnimationFrame((t) => this.render(t));
     }
 }
 
-const commandDebugRenderer = (command: Command, svg: HTMLElement): void =>
+const debugRender = (command: Command, svg: HTMLElement): void =>
 {
     switch (command.code)
     {
         case 'M':
         {
-            pointRenderer({x: command.x, y: command.y}, svg, "red");
+            renderPoint({x: command.x, y: command.y}, svg, "red");
             break;
         }
         case 'L':
         {
-            pointRenderer({x: command.x, y: command.y}, svg, "black");
+            renderPoint({x: command.x, y: command.y}, svg, "black");
             break;
         }
         case 'C':
         {
-            pointRenderer({x: command.x, y: command.y}, svg, "red");
-            pointRenderer({x: command.x1, y: command.y1}, svg, "purple");
-            pointRenderer({x: command.x2, y: command.y2}, svg, "purple");
+            renderPoint({x: command.x, y: command.y}, svg, "red");
+            renderPoint({x: command.x1, y: command.y1}, svg, "purple");
+            renderPoint({x: command.x2, y: command.y2}, svg, "purple");
             break;
         }
         case 'Z':
@@ -88,19 +90,26 @@ const commandDebugRenderer = (command: Command, svg: HTMLElement): void =>
     }
 }
 
-const pointRenderer = (point: {x: number, y: number}, svg: HTMLElement, color: string): void =>
+const renderPoint = (point: {x: number, y: number}, svg: HTMLElement, color: string, size?: string): void =>
 {
     const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     circle.setAttribute("cx", point.x.toFixed(2));
     circle.setAttribute("cy", point.y.toFixed(2));
-    circle.setAttribute("r", "1.5");
+    if (size === undefined)
+    {
+        circle.setAttribute("r", "5");
+    }
+    else
+    {
+        circle.setAttribute("r", size);
+    }
     circle.setAttribute("stroke", "black");
     circle.setAttribute("stroke-width", "0");
     circle.setAttribute("fill", color);
     svg.appendChild(circle);
 }
 
-const commandSerializer = (command: Command): string =>
+const serializeCommand = (command: Command): string =>
 {
     switch (command.code)
     {

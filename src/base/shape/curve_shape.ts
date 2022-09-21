@@ -26,4 +26,10 @@ export class CurveShape implements Shape<CurveToCommandMadeAbsolute>
         return this.svgData;
     }
 
+    get center(): { x: number, y: number }
+    {
+        const cmd = this.command;
+        return {x: (cmd.x0 + cmd.x) / 2, y: (cmd.y + cmd.y0) / 2};
+    }
+
 }

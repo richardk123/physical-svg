@@ -24,4 +24,9 @@ export class PointShape implements Shape<MoveToCommandMadeAbsolute>
         return this._move;
     }
 
+    get center(): { x: number; y: number }
+    {
+        return {x: this._move.x, y: this._move.y};
+    }
+
 }
