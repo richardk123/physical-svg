@@ -32,7 +32,7 @@ export class LineBody extends AbstractBody<LineShape>
     {
         const x = this._body.position.x;
         const y = this._body.position.y;
-        const angle = this._body.angle;
+        const angle = this._body.parent.angle + this._body.angle;
 
         this._shape.command.x = x + Math.cos(angle - Math.PI) * (this._length / 2);
         this._shape.command.y = y + Math.sin(angle - Math.PI) * (this._length / 2);
