@@ -22,20 +22,20 @@ export class MatterJsPhysics implements Physics
         this._world = this._engine.world;
         this._bodies = [];
 
-        // this._engine.gravity.y = 0.1;
+        this._engine.gravity.y = 0.1;
     }
 
     init(aggregatedShapes: Shape<Command>[][]): void
     {
         // create bounding box
         {
-            const g1 = Bodies.rectangle(250, 650, 500, 100, {isStatic: true});
+            const g1 = Bodies.rectangle(250, 650, 500, 100, {isStatic: true, friction: 1, restitution: 0});
             World.add(this._world, g1);
 
-            const g2 = Bodies.rectangle(-50, 300, 100, 600, {isStatic: true});
+            const g2 = Bodies.rectangle(-50, 300, 100, 600, {isStatic: true, friction: 1, restitution: 0});
             World.add(this._world, g2);
 
-            const g3 = Bodies.rectangle(550, 300, 100, 600, {isStatic: true});
+            const g3 = Bodies.rectangle(550, 300, 100, 600, {isStatic: true, friction: 1, restitution: 0});
             World.add(this._world, g3);
         }
 
@@ -48,7 +48,7 @@ export class MatterJsPhysics implements Physics
                 .map(shape => shape.center.y)
                 .reduce((acc, cur) => acc + cur) / shapes.length;
 
-            const rootBody = Bodies.circle(midX, midY, 3000, {friction: 0, restitution: 1});
+            const rootBody = Bodies.circle(midX, midY, 3000, {friction: 0, restitution: .5});
             // const aggregatedBody = Body.create({position: {x: midX, y: midY}});
 
             const aggregatedBodies = shapes.map(shape => physBodyFactory(shape, rootBody));
@@ -66,15 +66,17 @@ export class MatterJsPhysics implements Physics
             element: document.body,
             engine: this._engine,
             options: {
+                wireframes: true,
                 width: 500,
                 height: 600,
-                showAngleIndicator: true,
+                // showPositions: true,
+                // showAngleIndicator: true,
             },
         });
 
         // Render.lookAt(render, this._bodies[0].body, {
-        //     x: 500,
-        //     y: 600
+        //     x: 200,
+        //     y: 150
         // });
 
         Render.run(render);

@@ -15,7 +15,8 @@ export class LineBody extends AbstractBody<LineShape>
         const lineMidPoint = lineShape.center;
         const height = lineShape.svgData.relativeStrokeWidth;
 
-        this._point = Bodies.circle(lineShape.command.x, lineShape.command.y,1);
+        this._point = Bodies.circle(lineShape.command.x, lineShape.command.y,1, {isSensor: true});
+        Body.setDensity(this._point, 0);
         this._body = Bodies.rectangle(
             lineMidPoint.x, lineMidPoint.y, lineShape.findLength(), height,
             {

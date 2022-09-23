@@ -11,7 +11,9 @@ export class PointBody extends AbstractBody<PointShape>
         super(pointShape, parent);
 
         const center = this._shape.center;
-        this._point = Bodies.circle(center.x, center.y,1);
+        this._point = Bodies.circle(center.x, center.y,1,
+            {render: {fillStyle: "white"}, isSensor: true});
+        Body.setDensity(this._point, 0);
     }
 
     get body(): Body[]

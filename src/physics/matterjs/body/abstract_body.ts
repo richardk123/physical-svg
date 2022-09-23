@@ -19,5 +19,4 @@ export abstract class AbstractBody<T extends Shape<Command>>
 
     // return physics body
     abstract get body(): Body[];
-
 }
