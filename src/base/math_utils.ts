@@ -4,21 +4,20 @@ export const findAngle = (x: number, y: number, x1: number, y1: number): number 
     const Vx = x - x1;
     const Vy = y - y1;
 
-    // let radians;
+    let radians;
 
-    return Math.atan2(Vy, Vx) - Math.PI;
-    // if (Vx || Vy)
-    // {
-    //     radians = Math.atan2(Vy, Vx) - Math.PI;
-    // } else
-    // {
-    //     radians = 0;
-    // }
-    //
-    // if (radians < 0) {
-    //     radians += 2*Math.PI;
-    // }
-    // return radians;
+    if (Vx || Vy)
+    {
+        radians = Math.atan2(Vy, Vx) - Math.PI;
+    } else
+    {
+        radians = 0;
+    }
+
+    if (radians < 0) {
+        radians += 2*Math.PI;
+    }
+    return radians;
 }
 
 export const rotatePointAroundCenterPoint = (cx: number, cy: number, x: number, y: number, angle: number): {x: number, y: number} =>

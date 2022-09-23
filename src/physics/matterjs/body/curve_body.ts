@@ -9,6 +9,9 @@ import {
 export class CurveBody extends AbstractBody<CurveShape>
 {
     readonly _bodies: Body[];
+    readonly _point1: Body;
+    readonly _point2: Body;
+    readonly _point3: Body;
 
 
     constructor(curveShape: CurveShape, parent: Body)
@@ -19,10 +22,17 @@ export class CurveBody extends AbstractBody<CurveShape>
         const midPoint = curveShape.center;
         const height = curveShape.svgData.relativeStrokeWidth;
 
+        this._point1 = Bodies.circle(curveShape.command.x, curveShape.command.y,1);
+        this._point2 = Bodies.circle(curveShape.command.x1, curveShape.command.y1,1);
+        this._point3 = Bodies.circle(curveShape.command.x2, curveShape.command.y2,1);
+
         // TODO: parametrize lut steps based on length
         const bezierPoints = curveShape.bezier.getLUT(10);
 
         this._bodies = this.createInnerBodies(bezierPoints, height);
+        this._bodies.push(this._point1);
+        this._bodies.push(this._point2);
+        this._bodies.push(this._point3);
     }
 
     private createInnerBodies(bezierPoints: {x: number, y: number}[], height: number): Body[]
@@ -52,19 +62,16 @@ export class CurveBody extends AbstractBody<CurveShape>
         return this._bodies;
     }
 
-    setPositionsToShape(deltaAngle: number, deltaX: number, deltaY: number): void
+    setPositionsToShape(): void
     {
-        const newP1 = this.rotatePointAroundParent(this._shape.command.x + deltaX, this._shape.command.y + deltaY, deltaAngle);
-        this._shape.command.x = newP1.x;
-        this._shape.command.y = newP1.y;
+        this._shape.command.x = this._point1.position.x;
+        this._shape.command.y = this._point1.position.y;
 
-        const newP2 = this.rotatePointAroundParent(this._shape.command.x1 + deltaX, this._shape.command.y1 + deltaY, deltaAngle);
-        this._shape.command.x1 = newP2.x;
-        this._shape.command.y1 = newP2.y;
+        this._shape.command.x1 = this._point2.position.x;
+        this._shape.command.y1 = this._point2.position.y;
 
-        const newP3 = this.rotatePointAroundParent(this._shape.command.x2 + deltaX, this._shape.command.y2 + deltaY, deltaAngle);
-        this._shape.command.x2 = newP3.x;
-        this._shape.command.y2 = newP3.y;
+        this._shape.command.x2 = this._point3.position.x;
+        this._shape.command.y2 = this._point3.position.y;
 
     }
 }

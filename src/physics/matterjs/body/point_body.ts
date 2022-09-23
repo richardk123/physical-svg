@@ -1,30 +1,28 @@
-import {Bodies, Body, World} from "matter-js";
+import {Bodies, Body, Vector, World} from "matter-js";
 import {PointShape} from "../../../base/shape/point_shape";
 import {AbstractBody} from "./abstract_body";
 
 export class PointBody extends AbstractBody<PointShape>
 {
-    readonly _body: Body;
+    readonly _point: Body;
 
     constructor(pointShape: PointShape, parent: Body)
     {
         super(pointShape, parent);
 
         const center = this._shape.center;
-        this._body = Bodies.circle(center.x, center.y, 1);
+        this._point = Bodies.circle(center.x, center.y,1);
     }
 
     get body(): Body[]
     {
-        return [this._body];
+        return [this._point];
     }
 
-    setPositionsToShape(deltaAngle: number, deltaX: number, deltaY: number): void
+    setPositionsToShape(): void
     {
-        const newPoint = this.rotatePointAroundParent(this._shape.command.x + deltaX, this._shape.command.y + deltaY, deltaAngle);
-
-        this._shape.command.x = newPoint.x;
-        this._shape.command.y = newPoint.y;
+        this._shape.command.x = this._point.position.x;
+        this._shape.command.y = this._point.position.y;
     }
 
 }

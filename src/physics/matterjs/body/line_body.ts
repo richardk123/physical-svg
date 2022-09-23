@@ -1,10 +1,11 @@
 import {LineShape} from "../../../base/shape/line_shape";
-import {Bodies, Body, World} from "matter-js";
+import {Bodies, Body, Vector, World} from "matter-js";
 import {AbstractBody} from "./abstract_body";
 
 export class LineBody extends AbstractBody<LineShape>
 {
     readonly _body: Body;
+    readonly _point: Body;
 
     constructor(lineShape: LineShape, parent: Body)
     {
@@ -14,6 +15,7 @@ export class LineBody extends AbstractBody<LineShape>
         const lineMidPoint = lineShape.center;
         const height = lineShape.svgData.relativeStrokeWidth;
 
+        this._point = Bodies.circle(lineShape.command.x, lineShape.command.y,1);
         this._body = Bodies.rectangle(
             lineMidPoint.x, lineMidPoint.y, lineShape.findLength(), height,
             {
@@ -23,15 +25,13 @@ export class LineBody extends AbstractBody<LineShape>
 
     get body(): Body[]
     {
-        return [this._body];
+        return [this._body, this._point];
     }
 
-    setPositionsToShape(deltaAngle: number, deltaX: number, deltaY: number): void
+    setPositionsToShape(): void
     {
-        const newPoint = this.rotatePointAroundParent(this._shape.command.x + deltaX, this._shape.command.y + deltaY, deltaAngle);
-
-        this._shape.command.x = newPoint.x;
-        this._shape.command.y = newPoint.y;
+        this._shape.command.x = this._point.position.x;
+        this._shape.command.y = this._point.position.y;
     }
 
 }

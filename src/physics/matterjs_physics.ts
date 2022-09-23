@@ -14,8 +14,7 @@ export class MatterJsPhysics implements Physics
 {
     readonly _engine: Matter.Engine;
     readonly _world: Matter.World;
-    readonly _bodies: AbstractBody<Shape<Command>>[][] = [];
-    readonly _rootData: { angle: number, body: Body, x: number, y: number }[] = [];
+    private _bodies: AbstractBody<Shape<Command>>[];
 
     constructor()
     {
@@ -53,8 +52,7 @@ export class MatterJsPhysics implements Physics
             // const aggregatedBody = Body.create({position: {x: midX, y: midY}});
 
             const aggregatedBodies = shapes.map(shape => physBodyFactory(shape, rootBody));
-            this._bodies.push(aggregatedBodies);
-            this._rootData.push({angle: rootBody.angle, body: rootBody, x: rootBody.position.x, y: rootBody.position.y});
+            this._bodies = this._bodies.concat(aggregatedBodies);
 
             const bodies = aggregatedBodies.map(physBody => physBody.body).flatMap(body => body);
             Body.setParts(rootBody, bodies, false);
@@ -86,32 +84,7 @@ export class MatterJsPhysics implements Physics
     {
         // update physics
         Engine.update(this._engine);
-        this._bodies.forEach((bodies, index) =>
-        {
-            const rd = this._rootData[index];
-
-            const prevAngle = rd.angle;
-            const currentAngle = rd.body.angle;
-            rd.angle = currentAngle;
-
-            const prevX = rd.x;
-            const currentX = rd.body.position.x;
-            rd.x = currentX;
-
-            const prevY = rd.y;
-            const currentY = rd.body.position.y;
-            rd.y = currentY;
-
-
-            const deltaAngle = prevAngle - currentAngle;
-            const deltaX = currentX - prevX;
-            const deltaY = currentY - prevY;
-
-            bodies.forEach(body =>
-            {
-                body.setPositionsToShape(deltaAngle, deltaX, deltaY);
-            })
-        });
+        this._bodies.forEach(body => body.setPositionsToShape());
     }
 
 }

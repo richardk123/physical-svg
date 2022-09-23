@@ -15,13 +15,9 @@ export abstract class AbstractBody<T extends Shape<Command>>
     }
 
     // set values back to svg command
-    abstract setPositionsToShape(deltaAngle: number, deltaX: number, deltaY: number): void
+    abstract setPositionsToShape(): void
 
     // return physics body
     abstract get body(): Body[];
 
-    protected rotatePointAroundParent(x: number, y: number, deltaAngle: number): {x: number, y: number}
-    {
-        return rotatePointAroundCenterPoint(this._parent.position.x, this._parent.position.y, x, y, deltaAngle);
-    }
 }
