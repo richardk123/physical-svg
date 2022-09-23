@@ -48,11 +48,11 @@ export class DebugRenderer implements Renderer
             const pathString = commands.map(serializeCommand).join(" ");
             this._svgPaths[index].setAttribute("d", pathString);
         });
-
-        this._pathCommands.forEach((commands: Command[]) =>
-        {
-            commands.forEach(command => debugRender(command, this._svgClone));
-        });
+        //
+        // this._pathCommands.forEach((commands: Command[]) =>
+        // {
+        //     commands.forEach(command => debugRender(command, this._svgClone));
+        // });
 
         window.requestAnimationFrame((t) => this.render(t));
     }

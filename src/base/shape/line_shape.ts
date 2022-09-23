@@ -2,6 +2,7 @@ import {Shape} from "./shape";
 import {Line} from "../command_mapper";
 import {SvgData} from "../svg_data";
 import {Vector2d} from "../vector2d";
+import {findAngle} from "../math_utils";
 
 export class LineShape implements Shape<Line>
 {
@@ -34,24 +35,7 @@ export class LineShape implements Shape<Line>
     public findAngle(): number
     {
         const cmd = this.command;
-
-        const Vx = cmd.x - cmd.x0;
-        const Vy = cmd.y - cmd.y0;
-
-        let radians;
-
-        if (Vx || Vy)
-        {
-            radians = Math.atan2(Vy, Vx) - Math.PI;
-        } else
-        {
-            radians = 0;
-        }
-
-        if (radians < 0) {
-            radians += 2*Math.PI;
-        }
-        return radians
+        return findAngle(cmd.x, cmd.y, cmd.x0, cmd.y0);
     }
 
     public findLength(): number

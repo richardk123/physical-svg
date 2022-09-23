@@ -1,3 +1,4 @@
+// TODO: deprecated, replace with matterjs vector
 export class Vector2d
 {
     private readonly _x : number;

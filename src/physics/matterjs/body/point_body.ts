@@ -6,23 +6,25 @@ export class PointBody extends AbstractBody<PointShape>
 {
     readonly _body: Body;
 
-    constructor(pointShape: PointShape)
+    constructor(pointShape: PointShape, parent: Body)
     {
-        super(pointShape);
+        super(pointShape, parent);
 
         const center = this._shape.center;
         this._body = Bodies.circle(center.x, center.y, 1);
     }
 
-    get body(): Body
+    get body(): Body[]
     {
-        return this._body;
+        return [this._body];
     }
 
-    setPositionsToShape(): void
+    setPositionsToShape(deltaAngle: number, deltaX: number, deltaY: number): void
     {
-        this._shape.command.x = this._body.position.x;
-        this._shape.command.y = this._body.position.y;
+        const newPoint = this.rotatePointAroundParent(this._shape.command.x + deltaX, this._shape.command.y + deltaY, deltaAngle);
+
+        this._shape.command.x = newPoint.x;
+        this._shape.command.y = newPoint.y;
     }
 
 }

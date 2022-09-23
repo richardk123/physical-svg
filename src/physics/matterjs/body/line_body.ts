@@ -4,38 +4,34 @@ import {AbstractBody} from "./abstract_body";
 
 export class LineBody extends AbstractBody<LineShape>
 {
-    readonly _length: number;
     readonly _body: Body;
 
-    constructor(lineShape: LineShape)
+    constructor(lineShape: LineShape, parent: Body)
     {
-        super(lineShape);
-        this._length = lineShape.findLength();
+        super(lineShape, parent);
 
         const lineCmd = lineShape.command;
         const lineMidPoint = lineShape.center;
         const height = lineShape.svgData.relativeStrokeWidth;
 
         this._body = Bodies.rectangle(
-            lineMidPoint.x, lineMidPoint.y, this._length, height,
+            lineMidPoint.x, lineMidPoint.y, lineShape.findLength(), height,
             {
                 angle: lineShape.findAngle()
             });
     }
 
-    get body(): Body
+    get body(): Body[]
     {
-        return this._body;
+        return [this._body];
     }
 
-    setPositionsToShape(): void
+    setPositionsToShape(deltaAngle: number, deltaX: number, deltaY: number): void
     {
-        const x = this._body.position.x;
-        const y = this._body.position.y;
-        const angle = this._body.parent.angle + this._body.angle;
+        const newPoint = this.rotatePointAroundParent(this._shape.command.x + deltaX, this._shape.command.y + deltaY, deltaAngle);
 
-        this._shape.command.x = x + Math.cos(angle - Math.PI) * (this._length / 2);
-        this._shape.command.y = y + Math.sin(angle - Math.PI) * (this._length / 2);
+        this._shape.command.x = newPoint.x;
+        this._shape.command.y = newPoint.y;
     }
 
 }
