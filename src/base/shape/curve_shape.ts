@@ -1,25 +1,26 @@
 import {Shape} from "./shape";
-import {Command, CurveToCommandMadeAbsolute} from "svg-path-parser";
+import {
+    CurveToCommandMadeAbsolute,
+    QuadraticCurveToCommandMadeAbsolute,
+    SmoothCurveToCommandMadeAbsolute
+} from "svg-path-parser";
 import {SvgData} from "../svg_data";
-import {Line} from "../command_mapper";
 import {Bezier} from "bezier-js";
-import { findAngle } from "../math_utils";
-import {Vector2d} from "../vector2d";
 
-export class CurveShape implements Shape<CurveToCommandMadeAbsolute>
+export class CurveShape implements Shape<CurveToCommandMadeAbsolute | SmoothCurveToCommandMadeAbsolute | QuadraticCurveToCommandMadeAbsolute>
 {
     code: 'C';
-    private _curve: CurveToCommandMadeAbsolute
+    private _curve: CurveToCommandMadeAbsolute | SmoothCurveToCommandMadeAbsolute | QuadraticCurveToCommandMadeAbsolute;
     private _svgData: SvgData;
 
-    constructor(curve: CurveToCommandMadeAbsolute, svgData: SvgData)
+    constructor(curve: CurveToCommandMadeAbsolute | SmoothCurveToCommandMadeAbsolute | QuadraticCurveToCommandMadeAbsolute, svgData: SvgData)
     {
         this.code = 'C';
         this._curve = curve;
         this._svgData = svgData;
     }
 
-    get command(): CurveToCommandMadeAbsolute
+    get command(): CurveToCommandMadeAbsolute | SmoothCurveToCommandMadeAbsolute | QuadraticCurveToCommandMadeAbsolute
     {
         return this._curve;
     }
@@ -35,39 +36,41 @@ export class CurveShape implements Shape<CurveToCommandMadeAbsolute>
         return {x: mid.x, y: mid.y};
     }
 
-    // angle of whole curve
-    public findAngle(): number
+    get curvePoints(): {x: number, y: number}[]
     {
-        const cmd = this.command;
-        return findAngle(cmd.x0, cmd.y0, cmd.x, cmd.y);
-    }
-
-    public findBezierPointAngle(): number
-    {
-        const cmd = this.command;
-        return findAngle(cmd.x, cmd.y, cmd.x1, cmd.y1);
-    }
-
-    public findBezierPointDistance(): number
-    {
-        const cmd = this.command;
-        return new Vector2d(cmd.x, cmd.y).distance(new Vector2d(cmd.x1, cmd.y1));
-    }
-
-    public findLength(): number
-    {
-        return new Vector2d(this.command.x, this.command.y).distance(new Vector2d(this.command.x0, this.command.y0));
+        switch (this.command.code)
+        {
+            case 'C':
+            {
+                return [
+                    {x: this.command.x0, y: this.command.y0},
+                    {x: this.command.x1, y: this.command.y1},
+                    {x: this.command.x2, y: this.command.y2},
+                    {x: this.command.x, y: this.command.y},
+                ];
+            }
+            case 'Q':
+            {
+                return [
+                    {x: this.command.x0, y: this.command.y0},
+                    {x: this.command.x1, y: this.command.y1},
+                    {x: this.command.x, y: this.command.y},
+                ];
+            }
+            case "S":
+            {
+                return [
+                    {x: this.command.x0, y: this.command.y0},
+                    {x: this.command.x2, y: this.command.y2},
+                    {x: this.command.x, y: this.command.y},
+                ];
+            }
+        }
     }
 
     get bezier(): Bezier
     {
-        const points = [
-            {x: this.command.x0, y: this.command.y0},
-            {x: this.command.x1, y: this.command.y1},
-            {x: this.command.x2, y: this.command.y2},
-            {x: this.command.x,  y: this.command.y},
-        ];
-        return new Bezier(points);
+        return new Bezier(this.curvePoints);
     }
 
 }

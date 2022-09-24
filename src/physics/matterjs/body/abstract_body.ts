@@ -15,7 +15,7 @@ export abstract class AbstractBody<T extends Shape<Command>>
     }
 
     // set values back to svg command
-    abstract setPositionsToShape(): void
+    abstract updateSvgCommand(): void
 
     // return physics body
     abstract get body(): Body[];

@@ -21,13 +21,7 @@ export class LineCurveIntersector implements Intersector<CurveShape, LineShape>
             return true;
         }
 
-        const curvePoints = [
-            {x: curve.command.x0, y: curve.command.y0},
-            {x: curve.command.x1, y: curve.command.y1},
-            {x: curve.command.x2, y: curve.command.y2},
-            {x: curve.command.x, y: curve.command.y},
-        ];
-        const bezier = new Bezier(curvePoints);
+        const bezier = new Bezier(curve.curvePoints);
 
         return bezier.intersects({
             p1: {x: line.command.x0, y: line.command.y0},

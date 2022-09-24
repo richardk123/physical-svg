@@ -2,7 +2,7 @@ import {
     Command,
     CurveToCommandMadeAbsolute,
     LineToCommandMadeAbsolute,
-    MoveToCommandMadeAbsolute
+    MoveToCommandMadeAbsolute, QuadraticCurveToCommandMadeAbsolute, SmoothCurveToCommandMadeAbsolute
 } from "svg-path-parser";
 import {Shape} from "../base/shape/shape";
 import {Physics} from "../physics/physics";
@@ -131,6 +131,16 @@ const serializeCommand = (command: Command): string =>
         {
             const curve = command as CurveToCommandMadeAbsolute;
             return `C ${curve.x1.toFixed(2)} ${curve.y1.toFixed(2)} ${curve.x2.toFixed(2)} ${curve.y2.toFixed(2)}  ${curve.x.toFixed(2)} ${curve.y.toFixed(2)}`
+        }
+        case 'S':
+        {
+            const curve = command as SmoothCurveToCommandMadeAbsolute;
+            return `S ${curve.x2.toFixed(2)} ${curve.y2.toFixed(2)}  ${curve.x.toFixed(2)} ${curve.y.toFixed(2)}`
+        }
+        case 'Q':
+        {
+            const curve = command as QuadraticCurveToCommandMadeAbsolute;
+            return `Q ${curve.x1.toFixed(2)} ${curve.y1.toFixed(2)} ${curve.x.toFixed(2)} ${curve.y.toFixed(2)}`
         }
         default:
         {

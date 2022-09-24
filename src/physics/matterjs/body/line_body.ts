@@ -29,7 +29,7 @@ export class LineBody extends AbstractBody<LineShape>
         return [this._body, this._point];
     }
 
-    setPositionsToShape(): void
+    updateSvgCommand(): void
     {
         this._shape.command.x = this._point.position.x;
         this._shape.command.y = this._point.position.y;

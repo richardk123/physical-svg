@@ -21,7 +21,7 @@ export class PointBody extends AbstractBody<PointShape>
         return [this._point];
     }
 
-    setPositionsToShape(): void
+    updateSvgCommand(): void
     {
         this._shape.command.x = this._point.position.x;
         this._shape.command.y = this._point.position.y;

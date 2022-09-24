@@ -1,6 +1,10 @@
 import {
-    Command, CurveToCommandMadeAbsolute,
-    LineToCommandMadeAbsolute, MoveToCommandMadeAbsolute
+    Command,
+    CurveToCommandMadeAbsolute,
+    LineToCommandMadeAbsolute,
+    MoveToCommandMadeAbsolute,
+    QuadraticCurveToCommandMadeAbsolute,
+    SmoothCurveToCommandMadeAbsolute
 } from "svg-path-parser";
 import {Shape} from "./shape";
 import {Line} from "../command_mapper";
@@ -33,6 +37,16 @@ export const mapCommandsToShape = (commands: Command[], svgData: SvgData): Shape
                 case 'C':
                 {
                     const curve = command as CurveToCommandMadeAbsolute;
+                    return new CurveShape(curve, svgData);
+                }
+                case 'Q':
+                {
+                    const curve = command as QuadraticCurveToCommandMadeAbsolute;
+                    return new CurveShape(curve, svgData);
+                }
+                case 'S':
+                {
+                    const curve = command as SmoothCurveToCommandMadeAbsolute;
                     return new CurveShape(curve, svgData);
                 }
                 default:
