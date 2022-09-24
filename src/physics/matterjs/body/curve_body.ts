@@ -9,8 +9,8 @@ export class CurveBody extends AbstractCurveBody
 {
     readonly _bodies: Body[];
     readonly _point1: Body;
-    readonly _point2: Body | undefined;
-    readonly _point3: Body | undefined;
+    readonly _point2: Body;
+    readonly _point3: Body;
 
     constructor(curveShape: CurveShape, parent: Body)
     {
@@ -48,10 +48,10 @@ export class CurveBody extends AbstractCurveBody
         command.x = this._point1.position.x;
         command.y = this._point1.position.y;
 
-        command.x1 = this._point2!.position.x;
-        command.y1 = this._point2!.position.y;
+        command.x1 = this._point2.position.x;
+        command.y1 = this._point2.position.y;
 
-        command.x2 = this._point3!.position.x;
-        command.y2 = this._point3!.position.y;
+        command.x2 = this._point3.position.x;
+        command.y2 = this._point3.position.y;
     }
 }
