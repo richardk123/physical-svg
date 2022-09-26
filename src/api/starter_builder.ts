@@ -26,12 +26,11 @@ export class StarterBuilder
         const allCommands = pathCommandArray
             .flatMap(commands => commands);
 
-        // TODO:
-        const strokeWidth = +svg.getAttribute("stroke-width")!.replace("px","")
-        const shapes = mapCommandsToShape(allCommands, new SvgData(strokeWidth));
+        const svgData = new SvgData(svg);
+        const shapes = mapCommandsToShape(allCommands, svgData);
         const aggregatedShapes = this._aggregatorBuilder._aggregator.aggregate(shapes);
 
-        const renderer = new DebugRenderer(svg, pathCommandArray, aggregatedShapes);
+        const renderer = new DebugRenderer(svgData, pathCommandArray, aggregatedShapes);
         renderer.render(0);
     }
 }

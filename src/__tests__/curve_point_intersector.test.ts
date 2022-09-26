@@ -3,6 +3,7 @@ import {PointShape} from "../base/shape/point_shape";
 import {MoveToCommandMadeAbsolute} from "svg-path-parser";
 import {SvgData} from "../base/svg_data";
 import {CurvePointIntersector} from "../agregator/collision/curve_point_intersector";
+import {TestSvgData} from "./collision_aggregator.test";
 
 test('curve point does intersect', () =>
 {
@@ -22,7 +23,7 @@ test('curve point does not intersect', () =>
 
 const createPoint = (x: number, y: number): PointShape =>
 {
-    return new PointShape(new Move(x, y), new SvgData(1));
+    return new PointShape(new Move(x, y), new TestSvgData());
 }
 
 export class Move implements MoveToCommandMadeAbsolute

@@ -1,5 +1,5 @@
 import {LineShape} from "../../../base/shape/line_shape";
-import {Bodies, Body, Vector, World} from "matter-js";
+import {Bodies, Body} from "matter-js";
 import {AbstractBody} from "./abstract_body";
 
 export class LineBody extends AbstractBody<LineShape>

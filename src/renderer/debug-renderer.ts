@@ -7,6 +7,7 @@ import {
 import {Shape} from "../base/shape/shape";
 import {Physics} from "../physics/physics";
 import {MatterJsPhysics} from "../physics/matterjs_physics";
+import {SvgData} from "../base/svg_data";
 
 export class DebugRenderer implements Renderer
 {
@@ -17,19 +18,18 @@ export class DebugRenderer implements Renderer
     private _svgPaths: SVGPathElement[];
     private _physics: Physics;
 
-    constructor(svg: HTMLElement, pathCommands: Command[][], shapes: Shape<Command>[][])
+    constructor(svgData: SvgData, pathCommands: Command[][], shapes: Shape<Command>[][])
     {
         this._pathCommands = pathCommands;
         this._shapes = shapes;
 
-        this._physics = new MatterJsPhysics();
-        this._physics.init(shapes);
+        this._physics = new MatterJsPhysics(svgData, shapes);
 
-        const svgClone = svg.cloneNode(true) as HTMLElement;
+        const svgClone = svgData.svg.cloneNode(true) as HTMLElement;
         svgClone.id = svgClone.id + "1";
         this._svgClone = svgClone;
 
-        svg.parentElement!.append(svgClone);
+        svgData.svg.parentElement!.append(svgClone);
         this._svgPaths = Array.prototype.slice.call(svgClone.getElementsByTagName('path'));
     }
 

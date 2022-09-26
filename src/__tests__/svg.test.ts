@@ -4,6 +4,7 @@ import {CollisionAggregator} from "../agregator/collision_aggregator";
 import {mapCommandsToShape} from "../base/shape/shape_mapper";
 import {SvgData} from "../base/svg_data";
 import {Shape} from "../base/shape/shape";
+import {TestSvgData} from "./collision_aggregator.test";
 
 test('square from LHV', () =>
 {
@@ -64,7 +65,7 @@ const createHtmlAndParse = (html: string): Shape<Command>[][] =>
         {
             const absoluteCommands = makeAbsolute(parseSVG(path.getAttribute("d")));
             const filteredCommands = expandCommands(absoluteCommands);
-            return mapCommandsToShape(filteredCommands, new SvgData(1));
+            return mapCommandsToShape(filteredCommands, new TestSvgData());
         })
         .flatMap(cmdArray => cmdArray);
 

@@ -2,6 +2,7 @@ import {Line} from "../base/command_mapper";
 import {LineShape} from "../base/shape/line_shape";
 import {SvgData} from "../base/svg_data";
 import {LineLineIntersector} from "../agregator/collision/line_line_intersector";
+import {TestSvgData} from "./collision_aggregator.test";
 
 test('parallel lines', () =>
 {
@@ -47,5 +48,5 @@ test('lines intersect in one point', () =>
 
 export const createLine = (x: number, y: number, x0: number, y0: number) =>
 {
-    return new LineShape(new Line(x, y, x0, y0), new SvgData(1));
+    return new LineShape(new Line(x, y, x0, y0), new TestSvgData());
 }

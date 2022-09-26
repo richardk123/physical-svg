@@ -1,8 +1,8 @@
 import {LineCurveIntersector} from "../agregator/collision/line_curve_intersector";
 import {createLine} from "./line_line_intersector.test";
-import {SvgData} from "../base/svg_data";
 import {CurveShape} from "../base/shape/curve_shape";
 import {CurveToCommandMadeAbsolute} from "svg-path-parser";
+import {TestSvgData} from "./collision_aggregator.test";
 
 test('curve line intersect in start point', () =>
 {
@@ -30,7 +30,7 @@ test('curve line intersect in middle', () =>
 
 export const createCurve = (x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, x: number, y: number): CurveShape =>
 {
-    return new CurveShape(new Curve(x0, y0, x1, y1, x2, y2, x, y), new SvgData(1));
+    return new CurveShape(new Curve(x0, y0, x1, y1, x2, y2, x, y), new TestSvgData());
 }
 
 export class Curve implements CurveToCommandMadeAbsolute

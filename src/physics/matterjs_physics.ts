@@ -4,7 +4,8 @@ import {Command} from "svg-path-parser";
 import * as Matter from "matter-js";
 import {AbstractBody} from "./matterjs/body/abstract_body";
 import {physBodyFactory} from "./matterjs/body/body_factory";
-import {Body, Common, Events, Render, World} from "matter-js";
+import {Body, Common, Events, Render, Svg, World} from "matter-js";
+import {SvgData} from "../base/svg_data";
 
 const Engine = Matter.Engine;
 const Runner = Matter.Runner;
@@ -12,35 +13,21 @@ const Bodies = Matter.Bodies;
 
 export class MatterJsPhysics implements Physics
 {
+    readonly _svgData: SvgData;
     readonly _engine: Matter.Engine;
     readonly _world: Matter.World;
     private _bodies: AbstractBody<Shape<Command>>[];
 
-    constructor()
+    constructor(svgData: SvgData, aggregatedShapes: Shape<Command>[][])
     {
+        this._svgData = svgData;
         this._engine = Engine.create();
         this._world = this._engine.world;
         this._bodies = [];
 
         // this._engine.gravity.y = 0.1;
-    }
 
-    init(aggregatedShapes: Shape<Command>[][]): void
-    {
-        // create bounding box
-        {
-            const g1 = Bodies.rectangle(250, 650, 500, 100, {isStatic: true});
-            World.add(this._world, g1);
-
-            const g2 = Bodies.rectangle(-50, 300, 100, 600, {isStatic: true});
-            World.add(this._world, g2);
-
-            const g3 = Bodies.rectangle(550, 300, 100, 600, {isStatic: true});
-            World.add(this._world, g3);
-
-            const g4 = Bodies.rectangle(250, -50, 500, 100, {isStatic: true});
-            World.add(this._world, g4);
-        }
+        this.createColliderFrame(svgData);
 
         aggregatedShapes.forEach(shapes =>
         {
@@ -62,25 +49,106 @@ export class MatterJsPhysics implements Physics
             World.add(this._world, rootBody);
         })
 
+        this.createRenderer(svgData);
+    }
+
+    private createRenderer(svgData: SvgData): void
+    {
         // create renderer
         const render = Render.create({
             element: document.body,
             engine: this._engine,
             options: {
                 wireframes: true,
-                width: 500,
-                height: 600,
+                width: svgData.width,
+                height: svgData.height,
                 // showPositions: true,
-                // showAngleIndicator: true,
+                showAngleIndicator: false,
             },
         });
 
-        // Render.lookAt(render, this._bodies[0].body, {
-        //     x: 200,
-        //     y: 150
-        // });
+        if (svgData.viewBox !== undefined)
+        {
+            Render.lookAt(render, this._bodies.flatMap(body => body.body), {
+                x: (svgData.viewBox.minx + (svgData.viewBox.width)) / 2,
+                y: (svgData.viewBox.miny + (svgData.viewBox.height)) / 2
+            }, true);
+        }
+        else
+        {
+            Render.lookAt(render, this._bodies.flatMap(body => body.body), {
+                x: svgData.width,
+                y: svgData.height
+            }, true);
+        }
+
+
+            // Render.lookAt(render, this._bodies.flatMap(body => body.body), {
+            //     x: svgData.width,
+            //     y: svgData.height
+            // }, true);
+
+        // Render.setPixelRatio(render, svgData.width / svgData.height)
 
         Render.run(render);
+    }
+
+    private createColliderFrame(svgData: SvgData): void
+    {
+        let width = svgData.width;
+        let height = svgData.height;
+        let offsetX = 0;
+        let offsetY = 0;
+        const wallSize = 100;
+
+        if (svgData.viewBox !== undefined)
+        {
+            const vbWidth =  svgData.viewBox.width;
+            const vbHeight = svgData.viewBox.height;
+            const vbWhRatio = vbWidth < vbHeight ? (vbHeight / vbWidth) : (vbWidth / vbHeight);
+            const whRatio = width < height ? (height / width) : (width / height);
+
+            offsetX = svgData.viewBox.minx
+            offsetY = svgData.viewBox.miny;
+
+            if (width < height)
+            {
+                height = vbHeight * whRatio * vbWhRatio;
+                offsetY -= (height - vbHeight) / 2;
+                width = vbWidth;
+            }
+            else
+            {
+                width =  vbWidth * whRatio * vbWhRatio;
+                offsetX -= (width - vbWidth) / 2;
+                height = vbHeight;
+            }
+        }
+
+        const bottom = Bodies.rectangle(
+            (width / 2) + offsetX,
+            height + (wallSize / 2) + offsetY,
+            width, wallSize, {isStatic: true});
+        World.add(this._world, bottom);
+
+        const top = Bodies.rectangle(
+            (width / 2)  + offsetX,
+            -(wallSize / 2) + offsetY,
+            width, wallSize, {isStatic: true});
+        World.add(this._world, top);
+
+        const left = Bodies.rectangle(
+            -(wallSize / 2) + offsetX,
+            (height / 2)  + offsetY,
+            wallSize, height, {isStatic: true});
+        World.add(this._world, left);
+
+        const right = Bodies.rectangle(
+            width + (wallSize / 2) + offsetX,
+            (height / 2) + offsetY,
+            wallSize, height, {isStatic: true});
+        World.add(this._world, right);
+
     }
 
     update(aggregatedShapes: Shape<Command>[][], deltaTime: number): void
