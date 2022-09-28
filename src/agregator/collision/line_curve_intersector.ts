@@ -2,21 +2,22 @@ import {Intersector} from "./intersector";
 import {CurveShape} from "../../base/shape/curve_shape";
 import {LineShape} from "../../base/shape/line_shape";
 import { Bezier, Point } from "bezier-js";
-import {Vector2d} from "../../base/vector2d";
+import {Vector} from "matter-js";
+import {vectorEquals} from "../../base/math_utils";
 
 export class LineCurveIntersector implements Intersector<CurveShape, LineShape>
 {
     intersects(curve: CurveShape, line: LineShape): boolean
     {
-        const curveStart = new Vector2d(curve.command.x0, curve.command.y0);
-        const curveEnd = new Vector2d(curve.command.x, curve.command.y);
-        const lineStart = new Vector2d(line.command.x0, line.command.y0);
-        const lineEnd = new Vector2d(line.command.x, line.command.y);
+        const curveStart = Vector.create(curve.command.x0, curve.command.y0);
+        const curveEnd = Vector.create(curve.command.x, curve.command.y);
+        const lineStart = Vector.create(line.command.x0, line.command.y0);
+        const lineEnd = Vector.create(line.command.x, line.command.y);
 
-        if (curveStart.equals(lineStart) ||
-            curveStart.equals(lineEnd) ||
-            curveEnd.equals(lineStart) ||
-            curveEnd.equals(lineEnd))
+        if (vectorEquals(curveStart, lineStart) ||
+            vectorEquals(curveStart, lineEnd) ||
+            vectorEquals(curveEnd, lineStart) ||
+            vectorEquals(curveEnd, lineEnd))
         {
             return true;
         }

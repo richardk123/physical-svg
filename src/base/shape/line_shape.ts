@@ -1,8 +1,7 @@
 import {Shape} from "./shape";
 import {Line} from "../command_mapper";
 import {SvgData} from "../svg_data";
-import {Vector2d} from "../vector2d";
-import {findAngle} from "../math_utils";
+import {findAngle, findDistance} from "../math_utils";
 
 export class LineShape implements Shape<Line>
 {
@@ -40,6 +39,6 @@ export class LineShape implements Shape<Line>
 
     public findLength(): number
     {
-        return new Vector2d(this.command.x, this.command.y).distance(new Vector2d(this.command.x0, this.command.y0));
+        return findDistance(this.command.x, this.command.y, this.command.x0, this.command.y0);
     }
 }

@@ -11,7 +11,7 @@ export class SvgData
     {
         this._svg = svg;
         // this._strokeWidth = Number(svg.getAttribute("stroke-width")!.toLowerCase().replace("px", ""));
-        this._strokeWidth = 5;
+        this._strokeWidth = 15;
         this._width = svg.clientWidth;
         this._height = svg.clientHeight;
 

@@ -1,6 +1,6 @@
 import {Bezier} from "bezier-js";
 import {Bodies, Body, Vector} from "matter-js";
-import {distance, findAngle} from "../../../base/math_utils";
+import {findDistanceVec, findAngle} from "../../../base/math_utils";
 import {AbstractBody} from "./abstract_body";
 import {CurveShape} from "../../../base/shape/curve_shape";
 
@@ -31,7 +31,7 @@ export abstract class AbstractCurveBody extends AbstractBody<CurveShape>
                 const direction = Vector.normalise(Vector.sub(next, current));
 
                 const midPoint = Vector.create((current.x + next.x) / 2,(current.y + next.y) / 2);
-                const d = distance(next, current);
+                const d = findDistanceVec(next, current);
 
                 return Bodies.rectangle(midPoint.x, midPoint.y, d, height,
                     {

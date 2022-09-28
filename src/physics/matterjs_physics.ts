@@ -25,7 +25,7 @@ export class MatterJsPhysics implements Physics
         this._world = this._engine.world;
         this._bodies = [];
 
-        // this._engine.gravity.y = 0.1;
+        // this._engine.gravity.y = 0;
 
         this.createColliderFrame(svgData);
 
@@ -38,7 +38,7 @@ export class MatterJsPhysics implements Physics
                 .map(shape => shape.center.y)
                 .reduce((acc, cur) => acc + cur) / shapes.length;
 
-            const rootBody = Bodies.circle(midX, midY, 3000, {friction: 0, restitution: 1});
+            const rootBody = Bodies.circle(midX, midY, 3000, {friction: 0, restitution: .9});
             // const aggregatedBody = Body.create({position: {x: midX, y: midY}});
 
             const aggregatedBodies = shapes.map(shape => physBodyFactory(shape, rootBody));
@@ -108,21 +108,35 @@ export class MatterJsPhysics implements Physics
             const vbWhRatio = vbWidth < vbHeight ? (vbHeight / vbWidth) : (vbWidth / vbHeight);
             const whRatio = width < height ? (height / width) : (width / height);
 
-            offsetX = svgData.viewBox.minx
-            offsetY = svgData.viewBox.miny;
-
             if (width < height)
             {
-                height = vbHeight * whRatio * vbWhRatio;
-                offsetY -= (height - vbHeight) / 2;
-                width = vbWidth;
+                if (vbWidth < vbHeight)
+                {
+                    height = vbHeight * (1 / whRatio) * vbWhRatio;
+                    width = vbWidth;
+                }
+                else
+                {
+                    height = vbHeight * whRatio * vbWhRatio;
+                    width = vbWidth;
+                }
             }
             else
             {
-                width =  vbWidth * whRatio * vbWhRatio;
-                offsetX -= (width - vbWidth) / 2;
-                height = vbHeight;
+                if (vbWidth <= vbHeight)
+                {
+                    width =  vbWidth * whRatio * vbWhRatio;
+                    height = vbHeight;
+                }
+                else
+                {
+                    width =  vbWidth * (1 / whRatio) * vbWhRatio;
+                    height = vbHeight;
+                }
             }
+
+            offsetX = svgData.viewBox.minx - (width - vbWidth) / 2;
+            offsetY = svgData.viewBox.miny - (height - vbHeight) / 2;
         }
 
         const bottom = Bodies.rectangle(

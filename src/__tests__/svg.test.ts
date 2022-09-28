@@ -2,7 +2,6 @@ import {expandCommands} from "../base/command_mapper";
 import {Command, makeAbsolute, parseSVG} from "svg-path-parser";
 import {CollisionAggregator} from "../agregator/collision_aggregator";
 import {mapCommandsToShape} from "../base/shape/shape_mapper";
-import {SvgData} from "../base/svg_data";
 import {Shape} from "../base/shape/shape";
 import {TestSvgData} from "./collision_aggregator.test";
 

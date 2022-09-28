@@ -1,17 +1,18 @@
 import {Intersector} from "./intersector";
 import {CurveShape} from "../../base/shape/curve_shape";
-import {Vector2d} from "../../base/vector2d";
 import {PointShape} from "../../base/shape/point_shape";
+import {Vector} from "matter-js";
+import {vectorEquals} from "../../base/math_utils";
 
 export class CurvePointIntersector implements Intersector<CurveShape, PointShape>
 {
     intersects(curve: CurveShape, point: PointShape): boolean
     {
-        const curveStart = new Vector2d(curve.command.x0, curve.command.y0);
-        const curveEnd = new Vector2d(curve.command.x, curve.command.y);
-        const pointVec = new Vector2d(point.command.x, point.command.y);
+        const curveStart = Vector.create(curve.command.x0, curve.command.y0);
+        const curveEnd = Vector.create(curve.command.x, curve.command.y);
+        const pointVec = Vector.create(point.command.x, point.command.y);
 
-        return curveStart.equals(pointVec) || curveEnd.equals(pointVec);
+        return vectorEquals(curveStart, pointVec) || vectorEquals(curveEnd, pointVec);
     }
 
     supportedShapeTypes(): [string, string]

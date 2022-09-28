@@ -1,5 +1,30 @@
 import {Vector} from "matter-js";
 
+export const findDistance = (x: number, y: number, x1: number, y1: number): number =>
+{
+    return Math.sqrt(Math.pow(x - x1, 2) + Math.pow(y - y1, 2));
+}
+
+export const findDistanceVec = (p1: Vector, p2: Vector): number =>
+{
+    return findDistance(p1.x, p1.y, p2.x, p2.y);
+}
+
+export const length = (p: Vector): number =>
+{
+    return Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2));
+}
+
+export const multiplyVec = (p1: Vector, p2: Vector): Vector =>
+{
+    return Vector.create(p1.x * p2.x, p1.y * p2.y);
+}
+
+export const vectorEquals = (p1: Vector, p2: Vector): boolean =>
+{
+    return p1.x === p2.x && p1.y === p2.y;
+}
+
 export const findAngle = (x: number, y: number, x1: number, y1: number): number =>
 {
     const Vx = x - x1;
@@ -19,11 +44,6 @@ export const findAngle = (x: number, y: number, x1: number, y1: number): number 
         radians += 2*Math.PI;
     }
     return radians;
-}
-
-export const distance = (p1: Vector, p2: Vector): number =>
-{
-    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2))
 }
 
 export const rotatePointAroundCenterPoint = (cx: number, cy: number, x: number, y: number, angle: number): {x: number, y: number} =>

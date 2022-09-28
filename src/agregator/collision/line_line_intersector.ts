@@ -1,30 +1,38 @@
-import {Vector2d} from "../../base/vector2d";
 import {Intersector} from "./Intersector";
 import {LineShape} from "../../base/shape/line_shape";
+import {Vector} from "matter-js";
+import {multiplyVec} from "../../base/math_utils";
 
 export class LineLineIntersector implements Intersector<LineShape, LineShape>
 {
     intersects(shape1: LineShape, shape2: LineShape): boolean
     {
-        const p1 = new Vector2d(shape1.command.x, shape1.command.y);
-        const p2 = new Vector2d(shape1.command.x0, shape1.command.y0);
+        const p1 = Vector.create(shape1.command.x, shape1.command.y);
+        const p2 = Vector.create(shape1.command.x0, shape1.command.y0);
 
-        const q1 = new Vector2d(shape2.command.x, shape2.command.y);
-        const q2 = new Vector2d(shape2.command.x0, shape2.command.y0);
+        const q1 = Vector.create(shape2.command.x, shape2.command.y);
+        const q2 = Vector.create(shape2.command.x0, shape2.command.y0);
 
-        const r = p2.deduct(p1);
-        const s = q2.deduct(q1);
-        const rxs = r.crossProduct(s);
-        const qpxr = q1.deduct(p1).crossProduct(r);
+        const r = Vector.sub(p2, p1);
+        const s = Vector.sub(q2, q1);
+        const rxs = Vector.cross(r, s);
+        const qpxr = Vector.cross(Vector.sub(q1, p1), r);
 
         // If r x s = 0 and (q - p) x r = 0, then the two lines are collinear.
         if (this.isZero(rxs) && this.isZero(qpxr))
         {
+            const q1p1rLength = Vector.magnitude(multiplyVec(Vector.sub(q1, p1), r));
+            const p1q1sLength = Vector.magnitude(multiplyVec(Vector.sub(p1, q1), s));
+            const rSquaredLength = Vector.magnitude(multiplyVec(r, r));
+            const sSquaredLength = Vector.magnitude(multiplyVec(s, s));
+
             // 1. If either  0 <= (q - p) * r <= r * r or 0 <= (p - q) * s <= * s
             // then the two lines are overlapping,
-            if ((0 <= q1.deduct(p1).multiplyV(r).length() && q1.deduct(p1).multiplyV(r).length() <= r.multiplyV(r).length()) ||
-                0 <= (p1.deduct(q1).multiplyV(s).length() && p1.deduct(q1).multiplyV(s) <= s.multiplyV(s)))
+            if ((0 <= q1p1rLength && q1p1rLength <= rSquaredLength) ||
+                0 <= (p1q1sLength && p1q1sLength <= sSquaredLength))
+            {
                 return true;
+            }
 
             // 2. If neither 0 <= (q - p) * r = r * r nor 0 <= (p - q) * s <= s * s
             // then the two lines are collinear but disjoint.
@@ -39,10 +47,10 @@ export class LineLineIntersector implements Intersector<LineShape, LineShape>
         }
 
         // t = (q - p) x s / (r x s)
-        const t = (q1.deduct(p1)).crossProduct(s) / rxs;
+        const t = Vector.cross(Vector.sub(q1, p1), s) / rxs;
 
         // u = (q - p) x r / (r x s)
-        const u = (q1.deduct(p1)).crossProduct(r) / rxs;
+        const u = Vector.cross(Vector.sub(q1, p1), r) / rxs;
 
         // 4. If r x s != 0 and 0 <= t <= 1 and 0 <= u <= 1
         // the two line segments meet at the point p + t r = q + u s.
