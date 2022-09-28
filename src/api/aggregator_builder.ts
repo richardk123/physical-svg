@@ -1,7 +1,7 @@
 import {Aggregator} from "../agregator/aggregator";
 import {CollisionAggregator} from "../agregator/collision_aggregator";
-import {NoAggregator} from "../agregator/no_aggregator";
 import {StarterBuilder} from "./starter_builder";
+import {PathAggregator} from "../agregator/path_aggregator";
 
 export class AggregatorBuilder
 {
@@ -20,9 +20,9 @@ export class AggregatorBuilder
         return new StarterBuilder(this);
     }
 
-    useNoAggregator(): StarterBuilder
+    usePathAggregator(): StarterBuilder
     {
-        this._aggregator = new NoAggregator();
+        this._aggregator = new PathAggregator();
         return new StarterBuilder(this);
     }
 
