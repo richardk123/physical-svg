@@ -14,8 +14,7 @@ export abstract class AbstractCurveBody<T extends CurveCommandType> implements C
         return Array.from(Array(numberOfPoints + 1).keys()).map(i => bezier.get(i * fraction));
     }
 
-    // TODO: parametrize lut steps based on length
-    protected createInnerBodies(height: number, curve: CurveCommandType): Body[]
+    protected createInnerBodies(colliderSize: number, curve: CurveCommandType): Body[]
     {
         const curvePoints = findCurvePoints(curve);
         const bezierPoints = this.createPoints(new Bezier(curvePoints), 3);
@@ -31,7 +30,7 @@ export abstract class AbstractCurveBody<T extends CurveCommandType> implements C
                 const midPoint = Vector.create((current.x + next.x) / 2,(current.y + next.y) / 2);
                 const d = findDistanceVec(next, current);
 
-                return Bodies.rectangle(midPoint.x, midPoint.y, d, height,
+                return Bodies.rectangle(midPoint.x, midPoint.y, d, colliderSize,
                     {
                         angle: findAngle(next.x, next.y, current.x, current.y)
                     });

@@ -8,13 +8,13 @@ import {AllCommandTypes} from "../../../base/command_mapper";
 import {CommandBody} from "./command_body";
 import {ClosePathBody} from "./close_path_body";
 
-export const physBodyFactory = (command: AllCommandTypes): CommandBody<AllCommandTypes> =>
+export const physBodyFactory = (command: AllCommandTypes, colliderSize: number): CommandBody<AllCommandTypes> =>
 {
     switch (command.code)
     {
         case "L":
         {
-            return new LineBody(command);
+            return new LineBody(command, colliderSize);
         }
         case "M":
         {
@@ -22,15 +22,15 @@ export const physBodyFactory = (command: AllCommandTypes): CommandBody<AllComman
         }
         case "C":
         {
-            return new CurveBody(command);
+            return new CurveBody(command, colliderSize);
         }
         case "Q":
         {
-            return new QuadraticCurveBody(command);
+            return new QuadraticCurveBody(command, colliderSize);
         }
         case "S":
         {
-            return new ReflectionCurveBody(command);
+            return new ReflectionCurveBody(command, colliderSize);
         }
         case "T":
         {

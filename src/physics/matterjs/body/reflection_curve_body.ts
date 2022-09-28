@@ -11,16 +11,13 @@ export class ReflectionCurveBody extends AbstractCurveBody<SmoothCurveToCommandM
     readonly _point1: Body;
     readonly _point3: Body
 
-    constructor(curve: SmoothCurveToCommandMadeAbsolute)
+    constructor(curve: SmoothCurveToCommandMadeAbsolute, colliderSize: number)
     {
         super();
 
         this._curve = curve;
 
-        // TODO: parametrize
-        const height = 5;
-
-        this._bodies = this.createInnerBodies(height, curve);
+        this._bodies = this.createInnerBodies(colliderSize, curve);
 
         this._point1 = Bodies.circle(curve.x, curve.y,1,
             {isSensor: true, render: {fillStyle: "lightblue"}});

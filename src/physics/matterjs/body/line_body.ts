@@ -12,16 +12,13 @@ export class LineBody implements CommandBody<LineToCommandMadeAbsolute>
     readonly _body: Body;
     readonly _point: Body;
 
-    constructor(lineCmd: LineToCommandMadeAbsolute)
+    constructor(lineCmd: LineToCommandMadeAbsolute, colliderSize: number)
     {
         this._lineCmd = lineCmd;
 
         const lineMidPoint = findCenterOfLineCommand(lineCmd);
         const lineLength = findLengthOfLineCommand(lineCmd);
         const lineAngle = findAngleOfLineCommand(lineCmd);
-
-        // TODO: parametrize
-        const height = 5;
 
         const p1 = Vector.create(lineCmd.x, lineCmd.y);
         const p2 = Vector.create(lineCmd.x0, lineCmd.y0);
@@ -30,7 +27,7 @@ export class LineBody implements CommandBody<LineToCommandMadeAbsolute>
         Body.setDensity(this._point, 0);
 
         this._body = Bodies.rectangle(
-            lineMidPoint.x, lineMidPoint.y, lineLength, height,
+            lineMidPoint.x, lineMidPoint.y, lineLength, colliderSize,
             {
                 angle: lineAngle
             });
