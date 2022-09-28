@@ -1,20 +1,20 @@
 import {Intersector} from "./intersector";
-import {PointShape} from "../../base/shape/point_shape";
 import {Vector} from "matter-js";
 import {vectorEquals} from "../../base/math_utils";
+import {MoveToCommandMadeAbsolute} from "svg-path-parser";
 
-export class PointPointIntersector implements Intersector<PointShape, PointShape>
+export class PointPointIntersector implements Intersector<MoveToCommandMadeAbsolute, MoveToCommandMadeAbsolute>
 {
-    intersects(point1: PointShape, point2: PointShape): boolean
+    intersects(point1: MoveToCommandMadeAbsolute, point2: MoveToCommandMadeAbsolute): boolean
     {
-        const point1Vec = Vector.create(point1.command.x, point1.command.y);
-        const point2Vec = Vector.create(point2.command.x, point2.command.y);
+        const point1Vec = Vector.create(point1.x, point1.y);
+        const point2Vec = Vector.create(point2.x, point2.y);
 
         return vectorEquals(point1Vec, point2Vec);
     }
 
-    supportedShapeTypes(): [string, string]
+    supportedCommandTypes(): [string[], string[]]
     {
-        return ["M", "M"];
+        return [["M"], ["M"]];
     }
 }

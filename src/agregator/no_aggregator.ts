@@ -1,11 +1,10 @@
 import {Aggregator} from "./aggregator";
-import {Command} from "svg-path-parser";
-import {Shape} from "../base/shape/shape";
+import {AllCommandTypes} from "../base/command_mapper";
 
 export class NoAggregator implements Aggregator
 {
-    aggregate(shapes: Shape<Command>[]): Shape<Command>[][]
+    aggregate(pathCommands: AllCommandTypes[][]): AllCommandTypes[][]
     {
-        return shapes.map(shape => [shape]);
+        return pathCommands.flatMap(commands => commands).map(shape => [shape]);
     }
 }

@@ -1,11 +1,11 @@
 import {Physics} from "./physics";
-import {Shape} from "../base/shape/shape";
-import {Command} from "svg-path-parser";
 import * as Matter from "matter-js";
-import {AbstractBody} from "./matterjs/body/abstract_body";
-import {physBodyFactory} from "./matterjs/body/body_factory";
-import {Body, Common, Events, Render, Svg, World} from "matter-js";
+import {Body, Render, World} from "matter-js";
 import {SvgData} from "../base/svg_data";
+import {AllCommandTypes} from "../base/command_mapper";
+import {findCenterOfCommand} from "../base/command_utils";
+import {physBodyFactory} from "./matterjs/body/body_factory";
+import {CommandBody} from "./matterjs/body/command_body";
 
 const Engine = Matter.Engine;
 const Runner = Matter.Runner;
@@ -16,43 +16,43 @@ export class MatterJsPhysics implements Physics
     readonly _svgData: SvgData;
     readonly _engine: Matter.Engine;
     readonly _world: Matter.World;
-    private _bodies: AbstractBody<Shape<Command>>[];
+    readonly _render: Render;
+    private _commandBodies: CommandBody<AllCommandTypes>[];
 
-    constructor(svgData: SvgData, aggregatedShapes: Shape<Command>[][])
+    constructor(svgData: SvgData, aggregatedCommands: AllCommandTypes[][])
     {
         this._svgData = svgData;
         this._engine = Engine.create();
         this._world = this._engine.world;
-        this._bodies = [];
+        this._commandBodies = [];
 
         // this._engine.gravity.y = 0;
 
         this.createColliderFrame(svgData);
 
-        aggregatedShapes.forEach(shapes =>
+        aggregatedCommands.forEach(commands =>
         {
-            const midX = shapes
-                .map(shape => shape.center.x)
-                .reduce((acc, cur) => acc + cur) / shapes.length;
-            const midY = shapes
-                .map(shape => shape.center.y)
-                .reduce((acc, cur) => acc + cur) / shapes.length;
+            const midX = commands
+                .map(command => findCenterOfCommand(command).x)
+                .reduce((acc, cur) => acc + cur) / commands.length;
+            const midY = commands
+                .map(command => findCenterOfCommand(command).y)
+                .reduce((acc, cur) => acc + cur) / commands.length;
 
-            const rootBody = Bodies.circle(midX, midY, 3000, {friction: 0, restitution: .9});
-            // const aggregatedBody = Body.create({position: {x: midX, y: midY}});
+            const rootBody = Bodies.circle(midX, midY, 3000, {friction: 0, restitution: 1.06});
 
-            const aggregatedBodies = shapes.map(shape => physBodyFactory(shape, rootBody));
-            this._bodies = this._bodies.concat(aggregatedBodies);
+            const commandBodies = commands.map(command => physBodyFactory(command));
+            this._commandBodies = this._commandBodies.concat(commandBodies);
 
-            const bodies = aggregatedBodies.map(physBody => physBody.body).flatMap(body => body);
-            Body.setParts(rootBody, bodies, false);
+            const physBodies = commandBodies.map(physBody => physBody.bodies).flatMap(body => body);
+            Body.setParts(rootBody, physBodies, false);
             World.add(this._world, rootBody);
         })
 
-        this.createRenderer(svgData);
+        this._render = this.createRenderer(svgData);
     }
 
-    private createRenderer(svgData: SvgData): void
+    private createRenderer(svgData: SvgData): Render
     {
         // create renderer
         const render = Render.create({
@@ -67,30 +67,8 @@ export class MatterJsPhysics implements Physics
             },
         });
 
-        if (svgData.viewBox !== undefined)
-        {
-            Render.lookAt(render, this._bodies.flatMap(body => body.body), {
-                x: (svgData.viewBox.minx + (svgData.viewBox.width)) / 2,
-                y: (svgData.viewBox.miny + (svgData.viewBox.height)) / 2
-            }, true);
-        }
-        else
-        {
-            Render.lookAt(render, this._bodies.flatMap(body => body.body), {
-                x: svgData.width,
-                y: svgData.height
-            }, true);
-        }
-
-
-            // Render.lookAt(render, this._bodies.flatMap(body => body.body), {
-            //     x: svgData.width,
-            //     y: svgData.height
-            // }, true);
-
-        // Render.setPixelRatio(render, svgData.width / svgData.height)
-
         Render.run(render);
+        return render;
     }
 
     private createColliderFrame(svgData: SvgData): void
@@ -123,7 +101,7 @@ export class MatterJsPhysics implements Physics
             }
             else
             {
-                if (vbWidth <= vbHeight)
+                if (vbWidth < vbHeight)
                 {
                     width =  vbWidth * whRatio * vbWhRatio;
                     height = vbHeight;
@@ -162,14 +140,14 @@ export class MatterJsPhysics implements Physics
             (height / 2) + offsetY,
             wallSize, height, {isStatic: true});
         World.add(this._world, right);
-
     }
 
-    update(aggregatedShapes: Shape<Command>[][], deltaTime: number): void
+    update(aggregatedShapes: AllCommandTypes[][], deltaTime: number): void
     {
         // update physics
+        Render.lookAt(this._render, this._commandBodies.flatMap(body => body.bodies));
         Engine.update(this._engine);
-        this._bodies.forEach(body => body.updateSvgCommand());
+        this._commandBodies.forEach(body => body.updateSvgCommand());
     }
 
 }

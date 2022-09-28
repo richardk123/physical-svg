@@ -1,15 +1,12 @@
 import {Bezier} from "bezier-js";
 import {Bodies, Body, Vector} from "matter-js";
 import {findDistanceVec, findAngle} from "../../../base/math_utils";
-import {AbstractBody} from "./abstract_body";
-import {CurveShape} from "../../../base/shape/curve_shape";
+import {CurveCommandType} from "../../../base/command_mapper";
+import {findCurvePoints} from "../../../base/command_utils";
+import {CommandBody} from "./command_body";
 
-export abstract class AbstractCurveBody extends AbstractBody<CurveShape>
+export abstract class AbstractCurveBody<T extends CurveCommandType> implements CommandBody<T>
 {
-    constructor(curveShape: CurveShape, parent: Body)
-    {
-        super(curveShape, parent);
-    }
 
     private createPoints(bezier: Bezier, numberOfPoints: number): {x: number, y: number}[]
     {
@@ -18,9 +15,10 @@ export abstract class AbstractCurveBody extends AbstractBody<CurveShape>
     }
 
     // TODO: parametrize lut steps based on length
-    protected createInnerBodies(height: number): Body[]
+    protected createInnerBodies(height: number, curve: CurveCommandType): Body[]
     {
-        const bezierPoints = this.createPoints(this._shape.bezier, 3);
+        const curvePoints = findCurvePoints(curve);
+        const bezierPoints = this.createPoints(new Bezier(curvePoints), 3);
 
         return bezierPoints
             .filter((bp, index) => index < bezierPoints.length - 1)
@@ -39,4 +37,8 @@ export abstract class AbstractCurveBody extends AbstractBody<CurveShape>
                     });
             })
     }
+
+    abstract get bodies(): Body[];
+
+    abstract updateSvgCommand(): void;
 }

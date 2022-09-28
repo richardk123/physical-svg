@@ -1,45 +1,44 @@
-import {Shape} from "../../../base/shape/shape";
-import {Command} from "svg-path-parser";
 import {World, Body} from "matter-js";
-import {LineShape} from "../../../base/shape/line_shape";
 import {LineBody} from "./line_body";
-import {PointShape} from "../../../base/shape/point_shape";
 import {PointBody} from "./point_body";
-import {AbstractBody} from "./abstract_body";
-import {CurveShape} from "../../../base/shape/curve_shape";
 import {CurveBody} from "./curve_body";
 import {ReflectionCurveBody} from "./reflection_curve_body";
 import {QuadraticCurveBody} from "./quadratic_curve_body";
+import {AllCommandTypes} from "../../../base/command_mapper";
+import {CommandBody} from "./command_body";
+import {ClosePathBody} from "./close_path_body";
 
-export const physBodyFactory = (shape: Shape<Command>, parent: Body): AbstractBody<Shape<Command>> =>
+export const physBodyFactory = (command: AllCommandTypes): CommandBody<AllCommandTypes> =>
 {
-    switch (shape.code)
+    switch (command.code)
     {
         case "L":
         {
-            const line = shape as LineShape;
-            return new LineBody(line, parent);
+            return new LineBody(command);
         }
         case "M":
         {
-            const point = shape as PointShape;
-            return new PointBody(point, parent);
+            return new PointBody(command);
         }
         case "C":
         {
-            const curve = shape as CurveShape;
-
-            switch (curve.command.code)
-            {
-                case "Q": return new QuadraticCurveBody(curve, parent);
-                case "C": return new CurveBody(curve, parent);
-                case "S": return new ReflectionCurveBody(curve, parent);
-                default: throw new Error(`cannot create body for shape ${shape.code} and command: ${shape.command.code}`);
-            }
+            return new CurveBody(command);
         }
-        default:
+        case "Q":
         {
-            throw new Error(`cannot create body for shape ${shape.code}`);
+            return new QuadraticCurveBody(command);
+        }
+        case "S":
+        {
+            return new ReflectionCurveBody(command);
+        }
+        case "T":
+        {
+            throw new Error("T not supported yet!");
+        }
+        case "Z":
+        {
+            return new ClosePathBody(command);
         }
     }
 }

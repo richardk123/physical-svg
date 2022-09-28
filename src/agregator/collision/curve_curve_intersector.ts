@@ -1,16 +1,18 @@
 import {Intersector} from "./intersector";
-import {CurveShape} from "../../base/shape/curve_shape";
 import {Vector} from "matter-js";
 import {vectorEquals} from "../../base/math_utils";
+import {findCurvePoints} from "../../base/command_utils";
+import {Bezier} from "bezier-js";
+import {CurveCommandType} from "../../base/command_mapper";
 
-export class CurveCurveIntersector implements Intersector<CurveShape, CurveShape>
+export class CurveCurveIntersector implements Intersector<CurveCommandType, CurveCommandType>
 {
-    intersects(curve1: CurveShape, curve2: CurveShape): boolean
+    intersects(curve1: CurveCommandType, curve2: CurveCommandType): boolean
     {
-        const curve1Start = Vector.create(curve1.command.x0, curve1.command.y0);
-        const curve1End = Vector.create(curve1.command.x, curve1.command.y);
-        const curve2Start = Vector.create(curve2.command.x0, curve2.command.y0);
-        const curve2End = Vector.create(curve2.command.x, curve2.command.y);
+        const curve1Start = Vector.create(curve1.x0, curve1.y0);
+        const curve1End = Vector.create(curve1.x, curve1.y);
+        const curve2Start = Vector.create(curve2.x0, curve2.y0);
+        const curve2End = Vector.create(curve2.x, curve2.y);
 
         if (vectorEquals(curve1Start, curve2Start) ||
             vectorEquals(curve1Start, curve2End) ||
@@ -20,16 +22,16 @@ export class CurveCurveIntersector implements Intersector<CurveShape, CurveShape
             return true;
         }
 
-        const bezier1 = curve1.bezier;
-        const bezier2 = curve2.bezier;
+        const bezier1 = new Bezier(findCurvePoints(curve1));
+        const bezier2 = new Bezier(findCurvePoints(curve2));
 
         const result = bezier1.curveintersects([bezier1], [bezier2]);
 
         return result.length !== 0;
     }
 
-    supportedShapeTypes(): [string, string]
+    supportedCommandTypes(): [string[], string[]]
     {
-        return ["C", "C"];
+        return [["C", "S", "Q"], ["C", "S", "Q"]];
     }
 }

@@ -10,6 +10,11 @@ export const findDistanceVec = (p1: Vector, p2: Vector): number =>
     return findDistance(p1.x, p1.y, p2.x, p2.y);
 }
 
+export const findCenterOfLine = (p1: Vector, p2: Vector): Vector =>
+{
+    return Vector.create((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
+}
+
 export const length = (p: Vector): number =>
 {
     return Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2));

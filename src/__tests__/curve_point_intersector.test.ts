@@ -1,30 +1,23 @@
-import {createCurve} from "./line_curve_intersector.test";
-import {PointShape} from "../base/shape/point_shape";
 import {MoveToCommandMadeAbsolute} from "svg-path-parser";
 import {SvgData} from "../base/svg_data";
 import {CurvePointIntersector} from "../agregator/collision/curve_point_intersector";
-import {TestSvgData} from "./collision_aggregator.test";
+import {Curve} from "./line_curve_intersector.test";
 
 test('curve point does intersect', () =>
 {
-    const point = createPoint(10, 80);
-    const curve = createCurve(10, 80, 40, 10, 65, 10, 95, 80);
+    const point = new Move(10, 80);
+    const curve = new Curve(10, 80, 40, 10, 65, 10, 95, 80);
 
     expect(new CurvePointIntersector().intersects(curve, point)).toBe(true);
 });
 
 test('curve point does not intersect', () =>
 {
-    const point = createPoint(50, 80);
-    const curve = createCurve(10, 80, 40, 10, 65, 10, 95, 80);
+    const point = new Move(50, 80);
+    const curve = new Curve(10, 80, 40, 10, 65, 10, 95, 80);
 
     expect(new CurvePointIntersector().intersects(curve, point)).toBe(false);
 });
-
-const createPoint = (x: number, y: number): PointShape =>
-{
-    return new PointShape(new Move(x, y), new TestSvgData());
-}
 
 export class Move implements MoveToCommandMadeAbsolute
 {

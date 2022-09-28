@@ -1,38 +1,52 @@
-import {LineShape} from "../../../base/shape/line_shape";
-import {Bodies, Body} from "matter-js";
-import {AbstractBody} from "./abstract_body";
+import {Bodies, Body, Vector} from "matter-js";
+import {LineCommandType} from "../../../base/command_mapper";
+import {findAngleOfLineCommand, findCenterOfLineCommand, findLengthOfLineCommand} from "../../../base/command_utils";
+import {CommandBody} from "./command_body";
+import {vectorEquals} from "../../../base/math_utils";
+import {LineToCommandMadeAbsolute} from "svg-path-parser";
 
-export class LineBody extends AbstractBody<LineShape>
+export class LineBody implements CommandBody<LineToCommandMadeAbsolute>
 {
+    readonly _bodies: Body[];
+    readonly _lineCmd: LineToCommandMadeAbsolute;
     readonly _body: Body;
     readonly _point: Body;
 
-    constructor(lineShape: LineShape, parent: Body)
+    constructor(lineCmd: LineToCommandMadeAbsolute)
     {
-        super(lineShape, parent);
+        this._lineCmd = lineCmd;
 
-        const lineCmd = lineShape.command;
-        const lineMidPoint = lineShape.center;
-        const height = lineShape.svgData.relativeStrokeWidth;
+        const lineMidPoint = findCenterOfLineCommand(lineCmd);
+        const lineLength = findLengthOfLineCommand(lineCmd);
+        const lineAngle = findAngleOfLineCommand(lineCmd);
 
-        this._point = Bodies.circle(lineShape.command.x, lineShape.command.y,1, {isSensor: true});
+        // TODO: parametrize
+        const height = 5;
+
+        const p1 = Vector.create(lineCmd.x, lineCmd.y);
+        const p2 = Vector.create(lineCmd.x0, lineCmd.y0);
+
+        this._point = Bodies.circle(lineCmd.x, lineCmd.y,1, {isSensor: true});
         Body.setDensity(this._point, 0);
+
         this._body = Bodies.rectangle(
-            lineMidPoint.x, lineMidPoint.y, lineShape.findLength(), height,
+            lineMidPoint.x, lineMidPoint.y, lineLength, height,
             {
-                angle: lineShape.findAngle()
+                angle: lineAngle
             });
+
+        this._bodies = [this._point, this._body];
     }
 
-    get body(): Body[]
+    get bodies(): Body[]
     {
-        return [this._body, this._point];
+        return this._bodies;
     }
 
     updateSvgCommand(): void
     {
-        this._shape.command.x = this._point.position.x;
-        this._shape.command.y = this._point.position.y;
+        this._lineCmd.x = this._point.position.x;
+        this._lineCmd.y = this._point.position.y;
     }
 
 }

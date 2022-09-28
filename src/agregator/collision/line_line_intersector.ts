@@ -1,17 +1,18 @@
 import {Intersector} from "./Intersector";
-import {LineShape} from "../../base/shape/line_shape";
 import {Vector} from "matter-js";
 import {multiplyVec} from "../../base/math_utils";
+import {LineCommandType} from "../../base/command_mapper";
+import {findLengthOfLineCommand} from "../../base/command_utils";
 
-export class LineLineIntersector implements Intersector<LineShape, LineShape>
+export class LineLineIntersector implements Intersector<LineCommandType, LineCommandType>
 {
-    intersects(shape1: LineShape, shape2: LineShape): boolean
+    intersects(line1: LineCommandType, line2: LineCommandType): boolean
     {
-        const p1 = Vector.create(shape1.command.x, shape1.command.y);
-        const p2 = Vector.create(shape1.command.x0, shape1.command.y0);
+        const p1 = Vector.create(line1.x, line1.y);
+        const p2 = Vector.create(line1.x0, line1.y0);
 
-        const q1 = Vector.create(shape2.command.x, shape2.command.y);
-        const q2 = Vector.create(shape2.command.x0, shape2.command.y0);
+        const q1 = Vector.create(line2.x, line2.y);
+        const q2 = Vector.create(line2.x0, line2.y0);
 
         const r = Vector.sub(p2, p1);
         const s = Vector.sub(q2, q1);
@@ -64,9 +65,9 @@ export class LineLineIntersector implements Intersector<LineShape, LineShape>
         return false;
     }
 
-    supportedShapeTypes(): [string, string]
+    supportedCommandTypes(): [string[], string[]]
     {
-        return ["L", "L"];
+        return [["L", "Z"], ["L", "Z"]];
     }
 
     private isZero(d: number): boolean

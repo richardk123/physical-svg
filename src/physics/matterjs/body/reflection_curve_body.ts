@@ -1,49 +1,50 @@
-import {CurveShape} from "../../../base/shape/curve_shape";
 import {Bodies, Body} from "matter-js";
 import {AbstractCurveBody} from "./abstract_curve_body";
 import {
     SmoothCurveToCommandMadeAbsolute
 } from "svg-path-parser";
 
-export class ReflectionCurveBody extends AbstractCurveBody
+export class ReflectionCurveBody extends AbstractCurveBody<SmoothCurveToCommandMadeAbsolute>
 {
+    readonly _curve: SmoothCurveToCommandMadeAbsolute;
     readonly _bodies: Body[];
     readonly _point1: Body;
     readonly _point3: Body
 
-    constructor(curveShape: CurveShape, parent: Body)
+    constructor(curve: SmoothCurveToCommandMadeAbsolute)
     {
-        super(curveShape, parent);
+        super();
 
-        const height = curveShape.svgData.relativeStrokeWidth;
+        this._curve = curve;
 
-        this._bodies = this.createInnerBodies(height);
-        const command = this._shape.command as SmoothCurveToCommandMadeAbsolute;
+        // TODO: parametrize
+        const height = 5;
 
-        this._point1 = Bodies.circle(command.x, command.y,1,
+        this._bodies = this.createInnerBodies(height, curve);
+
+        this._point1 = Bodies.circle(curve.x, curve.y,1,
             {isSensor: true, render: {fillStyle: "lightblue"}});
         Body.setDensity(this._point1, 0);
         this._bodies.push(this._point1);
 
-        this._point3 = Bodies.circle(command.x2, command.y2,1,
+        this._point3 = Bodies.circle(curve.x2, curve.y2,1,
             {isSensor: true, render: {fillStyle: "lightblue"}});
         Body.setDensity(this._point3, 0);
         this._bodies.push(this._point3);
     }
 
-    get body(): Matter.Body[]
+    get bodies(): Body[]
     {
         return this._bodies;
     }
 
     updateSvgCommand(): void
     {
-        const command = this._shape.command as SmoothCurveToCommandMadeAbsolute;
-        command.x = this._point1.position.x;
-        command.y = this._point1.position.y;
+        this._curve.x = this._point1.position.x;
+        this._curve.y = this._point1.position.y;
 
-        command.x2 = this._point3!.position.x;
-        command.y2 = this._point3!.position.y;
+        this._curve.x2 = this._point3.position.x;
+        this._curve.y2 = this._point3.position.y;
     }
 
 }

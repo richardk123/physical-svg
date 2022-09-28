@@ -2,7 +2,6 @@ import {AggregatorBuilder} from "./aggregator_builder";
 import {expandCommands} from "../base/command_mapper";
 import {makeAbsolute, parseSVG} from "svg-path-parser";
 import {DebugRenderer} from "../renderer/debug-renderer";
-import {mapCommandsToShape} from "../base/shape/shape_mapper";
 import {SvgData} from "../base/svg_data";
 
 export class StarterBuilder
@@ -23,14 +22,10 @@ export class StarterBuilder
             .map(path => path.getAttribute("d"))
             .map(pathString => expandCommands(makeAbsolute(parseSVG(pathString))));
 
-        const allCommands = pathCommandArray
-            .flatMap(commands => commands);
-
         const svgData = new SvgData(svg);
-        const shapes = mapCommandsToShape(allCommands, svgData);
-        const aggregatedShapes = this._aggregatorBuilder._aggregator.aggregate(shapes);
+        const aggregatedCommands = this._aggregatorBuilder._aggregator.aggregate(pathCommandArray);
 
-        const renderer = new DebugRenderer(svgData, pathCommandArray, aggregatedShapes);
+        const renderer = new DebugRenderer(svgData, pathCommandArray, aggregatedCommands);
         renderer.render(0);
     }
 }

@@ -3,16 +3,16 @@ import {Command} from "svg-path-parser";
 import {Aggregator} from "./aggregator";
 import {LineLineIntersector} from "./collision/line_line_intersector";
 import {AggregationTree} from "./collision/tree/aggregation_tree";
-import {Shape} from "../base/shape/shape";
 import {LinePointIntersector} from "./collision/line_point_intersector";
 import {LineCurveIntersector} from "./collision/line_curve_intersector";
 import {CurveCurveIntersector} from "./collision/curve_curve_intersector";
 import {CurvePointIntersector} from "./collision/curve_point_intersector";
 import {PointPointIntersector} from "./collision/point_point_intersector";
+import {AllCommandTypes} from "../base/command_mapper";
 
 export class CollisionAggregator implements Aggregator
 {
-    private _intersectorRegistry: Intersector<Shape<Command>, Shape<Command>>[];
+    private _intersectorRegistry: Intersector<AllCommandTypes, AllCommandTypes>[];
 
     constructor()
     {
@@ -21,41 +21,44 @@ export class CollisionAggregator implements Aggregator
     }
 
     // aggregate commands together if they intersect
-    aggregate(shapes: Shape<Command>[]): Shape<Command>[][]
+    aggregate(pathCommands: AllCommandTypes[][]): AllCommandTypes[][]
     {
-        const aggregationTree = new AggregationTree<Shape<Command>>(
+        const flatCommands = pathCommands
+            .flatMap(commands => commands);
+
+        const aggregationTree = new AggregationTree<AllCommandTypes>(
             (shape1, shape2) => this.intersect(shape1, shape2, this._intersectorRegistry));
 
-        shapes.forEach(shape =>
+        flatCommands.forEach(command =>
         {
-            aggregationTree.addValue(shape);
+            aggregationTree.addValue(command);
         });
 
         return aggregationTree.getAggregatedCommands();
     }
 
     // find intersector for two commands and call it
-    intersect(shape1: Shape<Command>, shape2: Shape<Command>, registry: Intersector<Shape<Command>, Shape<Command>>[]): boolean
+    private intersect(cmd1: AllCommandTypes, cmd2: AllCommandTypes, registry: Intersector<AllCommandTypes, AllCommandTypes>[]): boolean
     {
         const matchingIntersector = registry.find(intersector =>
         {
-            const cmdType = intersector.supportedShapeTypes();
-            return (shape1.code === cmdType[0] && shape2.code === cmdType[1]) ||
-                (shape1.code === cmdType[1] && shape2.code === cmdType[0]);
+            const cmdType = intersector.supportedCommandTypes();
+            return (cmdType[0].includes(cmd1.code) && cmdType[1].includes(cmd2.code)) ||
+                (cmdType[1].includes(cmd1.code) && cmdType[0].includes(cmd2.code));
         });
 
         if (matchingIntersector === undefined)
         {
-            throw new Error(`intersector not defined for types ${shape1.code} ${shape2.code}`);
+            throw new Error(`intersector not defined for types ${cmd1.code} ${cmd2.code}`);
         }
 
-        if (matchingIntersector.supportedShapeTypes()[0] === shape1.code)
+        if (matchingIntersector.supportedCommandTypes()[0].includes(cmd1.code))
         {
-            return matchingIntersector.intersects(shape1, shape2);
+            return matchingIntersector.intersects(cmd1, cmd2);
         }
         else
         {
-            return matchingIntersector.intersects(shape2, shape1);
+            return matchingIntersector.intersects(cmd2, cmd1);
         }
     }
 }

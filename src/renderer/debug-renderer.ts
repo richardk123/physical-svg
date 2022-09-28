@@ -1,29 +1,29 @@
 import {
-    Command,
+    Command, CommandMadeAbsolute,
     CurveToCommandMadeAbsolute,
     LineToCommandMadeAbsolute,
     MoveToCommandMadeAbsolute, QuadraticCurveToCommandMadeAbsolute, SmoothCurveToCommandMadeAbsolute
 } from "svg-path-parser";
-import {Shape} from "../base/shape/shape";
 import {Physics} from "../physics/physics";
 import {MatterJsPhysics} from "../physics/matterjs_physics";
 import {SvgData} from "../base/svg_data";
+import {AllCommandTypes} from "../base/command_mapper";
 
 export class DebugRenderer implements Renderer
 {
     private _prevTime = 0;
-    private _pathCommands: Command[][];
-    private _shapes: Shape<Command>[][];
+    private _pathCommands: CommandMadeAbsolute[][];
+    private _aggregatedCommands: AllCommandTypes[][];
     private _svgClone: HTMLElement;
     private _svgPaths: SVGPathElement[];
     private _physics: Physics;
 
-    constructor(svgData: SvgData, pathCommands: Command[][], shapes: Shape<Command>[][])
+    constructor(svgData: SvgData, pathCommands: CommandMadeAbsolute[][], aggregatedCommands: AllCommandTypes[][])
     {
         this._pathCommands = pathCommands;
-        this._shapes = shapes;
+        this._aggregatedCommands = aggregatedCommands;
 
-        this._physics = new MatterJsPhysics(svgData, shapes);
+        this._physics = new MatterJsPhysics(svgData, aggregatedCommands);
 
         const svgClone = svgData.svg.cloneNode(true) as HTMLElement;
         svgClone.id = svgClone.id + "1";
@@ -37,76 +37,16 @@ export class DebugRenderer implements Renderer
     {
         this._prevTime = time;
 
-        // clear debug
-        const circles = Array.prototype.slice.call(this._svgClone.getElementsByTagName("circle"));
-        circles.forEach(circle => this._svgClone.removeChild(circle));
-
-        this._physics.update(this._shapes, time);
+        this._physics.update(this._aggregatedCommands, time);
 
         this._pathCommands.forEach((commands: Command[], index: number) =>
         {
             const pathString = commands.map(serializeCommand).join(" ");
             this._svgPaths[index].setAttribute("d", pathString);
         });
-        //
-        // this._pathCommands.forEach((commands: Command[]) =>
-        // {
-        //     commands.forEach(command => debugRender(command, this._svgClone));
-        // });
 
         window.requestAnimationFrame((t) => this.render(t));
     }
-}
-
-const debugRender = (command: Command, svg: HTMLElement): void =>
-{
-    switch (command.code)
-    {
-        case 'M':
-        {
-            renderPoint({x: command.x, y: command.y}, svg, "red");
-            break;
-        }
-        case 'L':
-        {
-            renderPoint({x: command.x, y: command.y}, svg, "black");
-            break;
-        }
-        case 'C':
-        {
-            renderPoint({x: command.x, y: command.y}, svg, "red");
-            renderPoint({x: command.x1, y: command.y1}, svg, "purple");
-            renderPoint({x: command.x2, y: command.y2}, svg, "purple");
-            break;
-        }
-        case 'Z':
-        {
-            break;
-        }
-        default:
-        {
-            throw new Error(`no debug renderer found for ${command.code}`);
-        }
-    }
-}
-
-const renderPoint = (point: {x: number, y: number}, svg: HTMLElement, color: string, size?: string): void =>
-{
-    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    circle.setAttribute("cx", point.x.toFixed(2));
-    circle.setAttribute("cy", point.y.toFixed(2));
-    if (size === undefined)
-    {
-        circle.setAttribute("r", "5");
-    }
-    else
-    {
-        circle.setAttribute("r", size);
-    }
-    circle.setAttribute("stroke", "black");
-    circle.setAttribute("stroke-width", "0");
-    circle.setAttribute("fill", color);
-    svg.appendChild(circle);
 }
 
 const serializeCommand = (command: Command): string =>

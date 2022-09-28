@@ -1,34 +1,65 @@
 import {
     ClosePathCommandMadeAbsolute,
-    Command, HorizontalLineToCommandMadeAbsolute,
+    Command, CommandMadeAbsolute,
+    CurveToCommandMadeAbsolute,
+    HorizontalLineToCommandMadeAbsolute,
     LineToCommandMadeAbsolute, MoveToCommandMadeAbsolute,
+    QuadraticCurveToCommandMadeAbsolute,
+    SmoothCurveToCommandMadeAbsolute, SmoothQuadraticCurveToCommandMadeAbsolute,
     VerticalLineToCommandMadeAbsolute
 } from "svg-path-parser";
+import {findLengthOfLineCommand} from "./command_utils";
+
+export type AllCommandTypes = (CurveCommandType | LineCommandType | MoveToCommandMadeAbsolute);
+
+export type CurveCommandType = (CurveToCommandMadeAbsolute |
+    SmoothCurveToCommandMadeAbsolute |
+    QuadraticCurveToCommandMadeAbsolute |
+    SmoothQuadraticCurveToCommandMadeAbsolute);
+
+export type LineCommandType = (LineToCommandMadeAbsolute | ClosePathCommandMadeAbsolute);
 
 // expand shorten line commands to full line commands
-export const expandCommands = (commands: Command[]): Command[] =>
+export const expandCommands = (commands: CommandMadeAbsolute[]): AllCommandTypes[] =>
 {
     return commands
+        .filter(command =>
+        {
+            switch (command.code)
+            {
+                case 'Z':
+                {
+                    // filter Z commands that don't have length
+                    if (findLengthOfLineCommand(command) === 0)
+                    {
+                        return false;
+                    }
+                }
+                default: return true;
+            }
+        })
         .map(command =>
         {
             switch (command.code)
             {
                 case 'H':
                 {
-                    const hLine = command as HorizontalLineToCommandMadeAbsolute;
-                    return new Line(hLine.x, hLine.y, hLine.x0, hLine.y0);
+                    return new Line(command.x, command.y, command.x0, command.y0);
                 }
                 case 'V':
                 {
-                    const vLine = command as VerticalLineToCommandMadeAbsolute;
-                    return new Line(vLine.x, vLine.y, vLine.x0, vLine.y0);
+                    return new Line(command.x, command.y, command.x0, command.y0);
+                }
+                case "A":
+                {
+                    throw new Error("A not supported yet");
                 }
                 default:
                 {
                     return command;
                 }
             }
-        });
+        })
 }
 
 export class Line implements LineToCommandMadeAbsolute

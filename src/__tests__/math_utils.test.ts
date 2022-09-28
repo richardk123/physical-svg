@@ -1,4 +1,5 @@
 import {
+    findCenterOfLine,
     findDistance, findDistanceVec,
     multiplyVec,
     rotatePointAroundCenterPoint,
@@ -45,6 +46,16 @@ test('find distance from two vectors', () =>
     const distance = findDistanceVec(p1, p2);
 
     expect(distance).toBeCloseTo(5);
+});
+
+test('find center of line', () =>
+{
+    const p1 = Vector.create(0, 0);
+    const p2 = Vector.create(10, 10);
+    const c = findCenterOfLine(p1, p2);
+
+    expect(c.x).toBeCloseTo(5);
+    expect(c.y).toBeCloseTo(5);
 });
 
 test('multiply two vectors', () =>

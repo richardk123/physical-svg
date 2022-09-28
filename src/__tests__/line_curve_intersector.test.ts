@@ -1,37 +1,30 @@
 import {LineCurveIntersector} from "../agregator/collision/line_curve_intersector";
-import {createLine} from "./line_line_intersector.test";
-import {CurveShape} from "../base/shape/curve_shape";
 import {CurveToCommandMadeAbsolute} from "svg-path-parser";
-import {TestSvgData} from "./collision_aggregator.test";
+import {Line} from "../base/command_mapper";
 
 test('curve line intersect in start point', () =>
 {
-    const line = createLine(70, 10, 0, 0);
-    const curve = createCurve(70, 10, 70, 20, 110, 20, 110, 10);
+    const line = new Line(70, 10, 0, 0);
+    const curve = new Curve(70, 10, 70, 20, 110, 20, 110, 10);
 
     expect(new LineCurveIntersector().intersects(curve, line)).toBe(true);
 });
 
 test('curve line intersect in end point', () =>
 {
-    const line = createLine(110, 10, 110, 0);
-    const curve = createCurve(70, 10, 70, 20, 110, 20, 110, 10);
+    const line = new Line(110, 10, 110, 0);
+    const curve = new Curve(70, 10, 70, 20, 110, 20, 110, 10);
 
     expect(new LineCurveIntersector().intersects(curve, line)).toBe(true);
 });
 
 test('curve line intersect in middle', () =>
 {
-    const line = createLine(90, 0, 90, 20);
-    const curve = createCurve(70, 10, 70, 20, 110, 20, 110, 10);
+    const line = new Line(90, 0, 90, 20);
+    const curve = new Curve(70, 10, 70, 20, 110, 20, 110, 10);
 
     expect(new LineCurveIntersector().intersects(curve, line)).toBe(true);
 });
-
-export const createCurve = (x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, x: number, y: number): CurveShape =>
-{
-    return new CurveShape(new Curve(x0, y0, x1, y1, x2, y2, x, y), new TestSvgData());
-}
 
 export class Curve implements CurveToCommandMadeAbsolute
 {

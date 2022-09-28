@@ -1,30 +1,33 @@
-import {Bodies, Body, Vector, World} from "matter-js";
-import {PointShape} from "../../../base/shape/point_shape";
-import {AbstractBody} from "./abstract_body";
+import {Bodies, Body} from "matter-js";
+import {MoveToCommandMadeAbsolute} from "svg-path-parser";
+import {CommandBody} from "./command_body";
 
-export class PointBody extends AbstractBody<PointShape>
+export class PointBody implements CommandBody<MoveToCommandMadeAbsolute>
 {
+    readonly _bodies: Body[];
     readonly _point: Body;
+    readonly _moveCmd: MoveToCommandMadeAbsolute;
 
-    constructor(pointShape: PointShape, parent: Body)
+    constructor(moveCmd: MoveToCommandMadeAbsolute)
     {
-        super(pointShape, parent);
+        this._moveCmd = moveCmd;
 
-        const center = this._shape.center;
-        this._point = Bodies.circle(center.x, center.y,1,
+        this._point = Bodies.circle(moveCmd.x, moveCmd.y,1,
             {render: {fillStyle: "white"}, isSensor: true});
         Body.setDensity(this._point, 0);
+
+        this._bodies = [this._point];
     }
 
-    get body(): Body[]
+    get bodies(): Body[]
     {
-        return [this._point];
+        return this._bodies;
     }
 
     updateSvgCommand(): void
     {
-        this._shape.command.x = this._point.position.x;
-        this._shape.command.y = this._point.position.y;
+        this._moveCmd.x = this._point.position.x;
+        this._moveCmd.y = this._point.position.y;
     }
 
 }

@@ -1,10 +1,9 @@
-import {Shape} from "../base/shape/shape";
-import {Command} from "svg-path-parser";
+import {AllCommandTypes} from "../base/command_mapper";
 
 export interface Aggregator
 {
     /**
      * aggregate commands that belongs together
      */
-    aggregate(shapes: Shape<Command>[]): Shape<Command>[][]
+    aggregate(pathCommands: AllCommandTypes[][]): AllCommandTypes[][]
 }

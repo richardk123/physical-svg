@@ -1,8 +1,8 @@
-import {Shape} from "../base/shape/shape";
 import {Command} from "svg-path-parser";
+import {AllCommandTypes} from "../base/command_mapper";
 
 export interface Physics
 {
 
-    update(aggregatedShapes: Shape<Command>[][], deltaTime: number) : void;
+    update(aggregatedShapes: AllCommandTypes[][], deltaTime: number) : void;
 }

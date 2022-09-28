@@ -1,18 +1,18 @@
 import {Intersector} from "./intersector";
-import {CurveShape} from "../../base/shape/curve_shape";
-import {LineShape} from "../../base/shape/line_shape";
-import { Bezier, Point } from "bezier-js";
+import { Bezier } from "bezier-js";
 import {Vector} from "matter-js";
 import {vectorEquals} from "../../base/math_utils";
+import {findCurvePoints, findLengthOfLineCommand} from "../../base/command_utils";
+import {CurveCommandType, LineCommandType} from "../../base/command_mapper";
 
-export class LineCurveIntersector implements Intersector<CurveShape, LineShape>
+export class LineCurveIntersector implements Intersector<CurveCommandType, LineCommandType>
 {
-    intersects(curve: CurveShape, line: LineShape): boolean
+    intersects(curve: CurveCommandType, line: LineCommandType): boolean
     {
-        const curveStart = Vector.create(curve.command.x0, curve.command.y0);
-        const curveEnd = Vector.create(curve.command.x, curve.command.y);
-        const lineStart = Vector.create(line.command.x0, line.command.y0);
-        const lineEnd = Vector.create(line.command.x, line.command.y);
+        const curveStart = Vector.create(curve.x0, curve.y0);
+        const curveEnd = Vector.create(curve.x, curve.y);
+        const lineStart = Vector.create(line.x0, line.y0);
+        const lineEnd = Vector.create(line.x, line.y);
 
         if (vectorEquals(curveStart, lineStart) ||
             vectorEquals(curveStart, lineEnd) ||
@@ -22,15 +22,13 @@ export class LineCurveIntersector implements Intersector<CurveShape, LineShape>
             return true;
         }
 
-        const bezier = new Bezier(curve.curvePoints);
+        const bezier = new Bezier(findCurvePoints(curve));
 
-        return bezier.intersects({
-            p1: {x: line.command.x0, y: line.command.y0},
-            p2: {x: line.command.x, y: line.command.y}}).length !== 0;
+        return bezier.intersects({ p1: lineStart, p2: lineEnd}).length !== 0;
     }
 
-    supportedShapeTypes(): [string, string]
+    supportedCommandTypes(): [string[], string[]]
     {
-        return ["C", "L"];
+        return [["C", "S", "Q"], ["L", "Z"]];
     }
 }

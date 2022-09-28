@@ -1,14 +1,15 @@
 import {Intersector} from "./intersector";
-import {LineShape} from "../../base/shape/line_shape";
-import {PointShape} from "../../base/shape/point_shape";
+import {ClosePathCommandMadeAbsolute, LineToCommandMadeAbsolute, MoveToCommandMadeAbsolute} from "svg-path-parser";
+import {LineCommandType} from "../../base/command_mapper";
+import {findLengthOfLineCommand} from "../../base/command_utils";
 
-export class LinePointIntersector implements Intersector<LineShape, PointShape>
+export class LinePointIntersector implements Intersector<LineCommandType, MoveToCommandMadeAbsolute>
 {
-    intersects(line: LineShape, point: PointShape): boolean
+    intersects(line: LineCommandType, point: MoveToCommandMadeAbsolute): boolean
     {
-        const a = {x: line.command.x, y: line.command.y};
-        const b = {x: line.command.x0, y: line.command.y0};
-        const c = {x: point.command.x, y: point.command.y};
+        const a = {x: line.x, y: line.y};
+        const b = {x: line.x0, y: line.y0};
+        const c = {x: point.x, y: point.y};
         const crossProduct = (c.y - a.y) * (b.x - a.x) - (c.x - a.x) * (b.y - a.y)
 
         // compare versus epsilon for floating point values, or != 0 if using integers
@@ -27,9 +28,9 @@ export class LinePointIntersector implements Intersector<LineShape, PointShape>
         return dotProduct <= squaredLengthBA;
     }
 
-    supportedShapeTypes(): [string, string]
+    supportedCommandTypes(): [string[], string[]]
     {
-        return ["L", "M"];
+        return [["L", "Z"], ["M"]];
     }
 
 }
