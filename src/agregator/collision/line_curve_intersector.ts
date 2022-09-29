@@ -1,5 +1,5 @@
 import {Intersector} from "./intersector";
-import {Bezier} from "./../../bezierjs/bezier";
+import {Bezier} from "./../../bezierjs/bezier.js";
 import {Vector} from "matter-js";
 import {vectorEquals} from "../../base/math_utils";
 import {findCurvePoints, findLengthOfLineCommand} from "../../base/command_utils";

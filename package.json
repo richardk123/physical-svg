@@ -1,6 +1,6 @@
 {
   "name": "physical-svg",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Library to animate svg image path based on 2d physics",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

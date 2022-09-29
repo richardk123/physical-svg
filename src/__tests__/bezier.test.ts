@@ -1,4 +1,4 @@
-import {Bezier} from "./../bezierjs/bezier";
+import {Bezier} from "./../bezierjs/bezier.js";
 
 test('bezier LUT', () =>
 {
