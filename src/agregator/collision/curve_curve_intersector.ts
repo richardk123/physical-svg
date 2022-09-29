@@ -2,7 +2,7 @@ import {Intersector} from "./intersector";
 import {Vector} from "matter-js";
 import {vectorEquals} from "../../base/math_utils";
 import {findCurvePoints} from "../../base/command_utils";
-import {Bezier} from "bezier-js";
+import {Bezier} from "./../../bezierjs/bezier";
 import {CurveCommandType} from "../../base/command_mapper";
 
 export class CurveCurveIntersector implements Intersector<CurveCommandType, CurveCommandType>

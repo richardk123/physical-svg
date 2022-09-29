@@ -1,7 +1,7 @@
 import {Vector} from "matter-js";
 import {findAngle, findCenterOfLine, findDistanceVec} from "./math_utils";
 import {CurveCommandType, LineCommandType, AllCommandTypes} from "./command_mapper";
-import {Bezier} from "bezier-js";
+import {Bezier} from "./../bezierjs/bezier";
 
 export const findCenterOfCommand = (command: AllCommandTypes): Vector =>
 {

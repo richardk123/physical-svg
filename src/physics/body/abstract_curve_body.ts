@@ -1,4 +1,4 @@
-import {Bezier} from "bezier-js";
+import {Bezier} from "./../../bezierjs/bezier";
 import {Bodies, Body, Vector} from "matter-js";
 import {findDistanceVec, findAngle} from "../../base/math_utils";
 import {CurveCommandType} from "../../base/command_mapper";
