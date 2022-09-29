@@ -1,8 +1,8 @@
 import {Bodies, Body, Vector} from "matter-js";
-import {LineCommandType} from "../../../base/command_mapper";
-import {findAngleOfLineCommand, findCenterOfLineCommand, findLengthOfLineCommand} from "../../../base/command_utils";
+import {LineCommandType} from "../../base/command_mapper";
+import {findAngleOfLineCommand, findCenterOfLineCommand, findLengthOfLineCommand} from "../../base/command_utils";
 import {CommandBody} from "./command_body";
-import {vectorEquals} from "../../../base/math_utils";
+import {vectorEquals} from "../../base/math_utils";
 import {LineToCommandMadeAbsolute} from "svg-path-parser";
 
 export class LineBody implements CommandBody<LineToCommandMadeAbsolute>

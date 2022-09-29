@@ -3,15 +3,15 @@ import {AllCommandTypes} from "./command_mapper";
 
 export class SvgData
 {
-    readonly _svg: HTMLElement;
-    readonly _strokeWidth: number;
-    readonly _width: number;
-    readonly _height: number;
+    private readonly _svg: HTMLElement;
+    private readonly _strokeWidth: number;
+    private readonly _width: number;
+    private readonly _height: number;
 
-    readonly _viewBox: {minx: number, miny: number; width: number, height: number} | undefined;
+    private readonly _viewBox: {minx: number, miny: number; width: number, height: number} | undefined;
 
-    readonly _pathCommands: CommandMadeAbsolute[][];
-    readonly _aggregatedCommands: AllCommandTypes[][];
+    private readonly _pathCommands: CommandMadeAbsolute[][];
+    private readonly _aggregatedCommands: AllCommandTypes[][];
 
     constructor(svg: HTMLElement, pathCommands: CommandMadeAbsolute[][], aggregatedCommands: AllCommandTypes[][])
     {

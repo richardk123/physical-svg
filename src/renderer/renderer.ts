@@ -5,12 +5,12 @@ import {
     LineToCommandMadeAbsolute,
     MoveToCommandMadeAbsolute, QuadraticCurveToCommandMadeAbsolute, SmoothCurveToCommandMadeAbsolute
 } from "svg-path-parser";
-import {Physics} from "../physics/physics";
+import {MatterJsPhysics} from "../physics/matterjs_physics";
 
 export interface Renderer
 {
     // function called each frame
-    renderLoop(svgData: SvgData, physics: Physics): void;
+    renderLoop(svgData: SvgData, physics: MatterJsPhysics): void;
 }
 
 export const serializeCommand = (command: Command): string =>

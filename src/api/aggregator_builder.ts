@@ -1,8 +1,7 @@
 import {Aggregator} from "../agregator/aggregator";
 import {CollisionAggregator} from "../agregator/collision_aggregator";
 import {PathAggregator} from "../agregator/path_aggregator";
-import {RenderBuilder} from "./render_builder";
-import {PhysicBuilder} from "./physics_builder";
+import {SimulationBuilder} from "./simulation_builder";
 
 export class AggregatorBuilder
 {
@@ -13,19 +12,19 @@ export class AggregatorBuilder
         this._svg = svg;
     }
 
-    useCollisionAggregator(): PhysicBuilder
+    useCollisionAggregator(): SimulationBuilder
     {
-        return new PhysicBuilder(new CollisionAggregator(), this._svg);
+        return new SimulationBuilder(new CollisionAggregator(), this._svg);
     }
 
-    usePathAggregator(): PhysicBuilder
+    usePathAggregator(): SimulationBuilder
     {
-        return new PhysicBuilder(new PathAggregator(), this._svg);
+        return new SimulationBuilder(new PathAggregator(), this._svg);
     }
 
-    useCustomAggregator(aggregator: Aggregator): PhysicBuilder
+    useCustomAggregator(aggregator: Aggregator): SimulationBuilder
     {
-        return new PhysicBuilder(aggregator, this._svg);
+        return new SimulationBuilder(aggregator, this._svg);
     }
 
 }

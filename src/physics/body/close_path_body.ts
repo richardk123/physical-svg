@@ -1,9 +1,9 @@
 import {CommandBody} from "./command_body";
 import {ClosePathCommandMadeAbsolute} from "svg-path-parser";
 import {Bodies, Body, Vector} from "matter-js";
-import {LineCommandType} from "../../../base/command_mapper";
-import {findAngleOfLineCommand, findCenterOfLineCommand, findLengthOfLineCommand} from "../../../base/command_utils";
-import {vectorEquals} from "../../../base/math_utils";
+import {LineCommandType} from "../../base/command_mapper";
+import {findAngleOfLineCommand, findCenterOfLineCommand, findLengthOfLineCommand} from "../../base/command_utils";
+import {vectorEquals} from "../../base/math_utils";
 
 export class ClosePathBody implements CommandBody<ClosePathCommandMadeAbsolute>
 {

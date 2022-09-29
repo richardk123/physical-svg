@@ -1,18 +1,18 @@
 import {Renderer, serializeCommand} from "./renderer";
 import {SvgData} from "../base/svg_data";
 import {Command} from "svg-path-parser";
-import {Physics} from "../physics/physics";
+import {MatterJsPhysics} from "../physics/matterjs_physics";
 
 export class ProductionRenderer implements Renderer
 {
-    renderLoop(svgData: SvgData, physics: Physics)
+    renderLoop(svgData: SvgData, physics: MatterJsPhysics)
     {
         const svgPaths = Array.prototype.slice.call(svgData.svg.getElementsByTagName('path'));
 
         this.updateFrame(svgData, physics, svgPaths);
     }
 
-    updateFrame(svgData: SvgData, physics: Physics, svgPaths: SVGPathElement[]): void
+    updateFrame(svgData: SvgData, physics: MatterJsPhysics, svgPaths: SVGPathElement[]): void
     {
         physics.update(svgData.aggregatedCommands);
 

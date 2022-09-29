@@ -1,8 +1,8 @@
 import {Bezier} from "bezier-js";
 import {Bodies, Body, Vector} from "matter-js";
-import {findDistanceVec, findAngle} from "../../../base/math_utils";
-import {CurveCommandType} from "../../../base/command_mapper";
-import {findCurvePoints} from "../../../base/command_utils";
+import {findDistanceVec, findAngle} from "../../base/math_utils";
+import {CurveCommandType} from "../../base/command_mapper";
+import {findCurvePoints} from "../../base/command_utils";
 import {CommandBody} from "./command_body";
 
 export abstract class AbstractCurveBody<T extends CurveCommandType> implements CommandBody<T>

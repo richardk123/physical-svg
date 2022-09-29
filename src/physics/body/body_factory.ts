@@ -4,7 +4,7 @@ import {PointBody} from "./point_body";
 import {CurveBody} from "./curve_body";
 import {ReflectionCurveBody} from "./reflection_curve_body";
 import {QuadraticCurveBody} from "./quadratic_curve_body";
-import {AllCommandTypes} from "../../../base/command_mapper";
+import {AllCommandTypes} from "../../base/command_mapper";
 import {CommandBody} from "./command_body";
 import {ClosePathBody} from "./close_path_body";
 

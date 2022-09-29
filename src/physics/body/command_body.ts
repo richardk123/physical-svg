@@ -1,5 +1,5 @@
 import {Body} from "matter-js";
-import {AllCommandTypes} from "../../../base/command_mapper";
+import {AllCommandTypes} from "../../base/command_mapper";
 
 export interface CommandBody<T extends AllCommandTypes>
 {
