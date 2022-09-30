@@ -40,6 +40,6 @@ export class MousePlugin implements PhysicsPlugin
 
     stop(): void
     {
-        // do nothing
+        // TODO: remove mouse listener
     }
 }

@@ -7,6 +7,7 @@ export class ScrollPlugin implements PhysicsPlugin
     private readonly _force: number;
     private _previousScrollPos: Vector | undefined;
     private _scrollPos: Vector | undefined;
+    private _listener: any;
 
     constructor(force: number)
     {
@@ -17,10 +18,8 @@ export class ScrollPlugin implements PhysicsPlugin
     {
         const world = physEngine.world;
 
-        window.onscroll = ( ev =>
-        {
-            this._scrollPos = Vector.create(window.scrollX, window.scrollY);
-        });
+        this._listener = (ev) => this._scrollPos = Vector.create(window.scrollX, window.scrollY)
+        window.addEventListener("scroll", this._listener);
 
         Events.on(physEngine, 'afterUpdate', () =>
         {
@@ -40,6 +39,6 @@ export class ScrollPlugin implements PhysicsPlugin
 
     stop(): void
     {
-        // do nothing
+        window.removeEventListener("scroll", this._listener);
     }
 }
