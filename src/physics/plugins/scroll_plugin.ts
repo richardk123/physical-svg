@@ -37,4 +37,9 @@ export class ScrollPlugin implements PhysicsPlugin
             this._previousScrollPos = this._scrollPos;
         });
     }
+
+    stop(): void
+    {
+        // do nothing
+    }
 }

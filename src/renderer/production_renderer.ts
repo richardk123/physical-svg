@@ -5,10 +5,11 @@ import {MatterJsPhysics} from "../physics/matterjs_physics";
 
 export class ProductionRenderer implements Renderer
 {
+    private _stopped = false;
+
     renderLoop(svgData: SvgData, physics: MatterJsPhysics)
     {
         const svgPaths = Array.prototype.slice.call(svgData.svg.getElementsByTagName('path'));
-
         this.updateFrame(svgData, physics, svgPaths);
     }
 
@@ -22,6 +23,14 @@ export class ProductionRenderer implements Renderer
             svgPaths[index].setAttribute("d", pathString);
         });
 
-        window.requestAnimationFrame((t) => this.updateFrame(svgData, physics, svgPaths));
+        if (!this._stopped)
+        {
+            window.requestAnimationFrame((t) => this.updateFrame(svgData, physics, svgPaths));
+        }
+    }
+
+    stop(): void
+    {
+        this._stopped = true;
     }
 }

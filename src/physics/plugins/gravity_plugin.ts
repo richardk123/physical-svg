@@ -17,4 +17,9 @@ export class GravityPlugin implements PhysicsPlugin
         engine.gravity.y = this._gravity.y;
     }
 
+    stop(): void
+    {
+        // do nothing
+    }
+
 }

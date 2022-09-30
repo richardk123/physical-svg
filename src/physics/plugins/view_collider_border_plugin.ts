@@ -77,4 +77,9 @@ export class ViewColliderBorder implements PhysicsPlugin
         World.add(world, right);
     }
 
+    stop(): void
+    {
+        // do nothing
+    }
+
 }

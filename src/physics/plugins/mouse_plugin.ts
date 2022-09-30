@@ -37,4 +37,9 @@ export class MousePlugin implements PhysicsPlugin
             this._previousMousePos = this._mousePos;
         });
     }
+
+    stop(): void
+    {
+        // do nothing
+    }
 }

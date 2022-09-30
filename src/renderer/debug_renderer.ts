@@ -5,6 +5,8 @@ import {Command} from "svg-path-parser";
 
 export class DebugRenderer implements Renderer
 {
+    private _stopped = false;
+
     renderLoop(svgData: SvgData, physics: MatterJsPhysics)
     {
         const svgClone = svgData.svg.cloneNode(true) as HTMLElement;
@@ -25,6 +27,14 @@ export class DebugRenderer implements Renderer
             svgPaths[index].setAttribute("d", pathString);
         });
 
-        window.requestAnimationFrame((t) => this.updateFrame(svgData, physics, svgPaths));
+        if (!this._stopped)
+        {
+            window.requestAnimationFrame((t) => this.updateFrame(svgData, physics, svgPaths));
+        }
+    }
+
+    stop(): void
+    {
+        this._stopped = true;
     }
 }

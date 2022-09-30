@@ -13,6 +13,7 @@ import {ProductionRenderer} from "../renderer/production_renderer";
 import {ScrollPlugin} from "../physics/plugins/scroll_plugin";
 import {LimitVelocityPlugin} from "../physics/plugins/limit_velocity_plugin";
 import {LimitAngularVelocityPlugin} from "../physics/plugins/limit_angular_velocity_plugin";
+import {StopPhysicalSvg} from "./stop_builder";
 
 export class SimulationBuilder
 {
@@ -75,13 +76,15 @@ export class SimulationBuilder
         return this;
     }
 
-    public startSimulation(config: BodyConfig): void
+    public startSimulation(config: BodyConfig): StopPhysicalSvg
     {
         const svgData = this.createSvgData();
         const physics = new MatterJsPhysics(svgData, config, this._plugins);
 
         const renderer = new ProductionRenderer();
         renderer.renderLoop(svgData, physics);
+
+        return new StopPhysicalSvg(physics, renderer);
     }
 
     private createSvgData(): SvgData

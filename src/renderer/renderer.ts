@@ -11,6 +11,9 @@ export interface Renderer
 {
     // function called each frame
     renderLoop(svgData: SvgData, physics: MatterJsPhysics): void;
+
+    // stop render loop
+    stop(): void;
 }
 
 export const serializeCommand = (command: Command): string =>

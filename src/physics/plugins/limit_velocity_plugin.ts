@@ -41,4 +41,10 @@ export class LimitVelocityPlugin implements PhysicsPlugin
         Events.on(engine, 'beforeUpdate', limitMaxSpeed);
     }
 
+
+    stop(): void
+    {
+        // do nothing
+    }
+
 }

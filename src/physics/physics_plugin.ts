@@ -11,4 +11,7 @@ export interface PhysicsPlugin
      */
     setup(svgData: SvgData, engine: Engine, rootBodies: Body[]): void;
 
+    // stop and remove everything created
+    stop(): void;
+
 }

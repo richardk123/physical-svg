@@ -30,4 +30,9 @@ export class LimitAngularVelocityPlugin implements PhysicsPlugin
         Events.on(engine, 'beforeUpdate', limitMaxSpeed);
     }
 
+
+    stop(): void
+    {
+        // do nothing
+    }
 }

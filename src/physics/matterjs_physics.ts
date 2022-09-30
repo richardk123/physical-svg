@@ -18,6 +18,7 @@ export class MatterJsPhysics
     readonly _engine: Matter.Engine;
     readonly _world: Matter.World;
     private _commandBodies: CommandBody<AllCommandTypes>[];
+    private _plugins: PhysicsPlugin[];
 
     constructor(svgData: SvgData, globalConfig: BodyConfig, plugins: PhysicsPlugin[])
     {
@@ -25,6 +26,7 @@ export class MatterJsPhysics
         this._engine = Engine.create();
         this._world = this._engine.world;
         this._commandBodies = [];
+        this._plugins = plugins;
         const rootBodies: Body[] = [];
 
         svgData.aggregatedCommands.forEach(commands =>
@@ -56,6 +58,11 @@ export class MatterJsPhysics
         // update physics
         Engine.update(this._engine);
         this._commandBodies.forEach(body => body.updateSvgCommand());
+    }
+
+    stop(): void
+    {
+        this._plugins.forEach(plugin => plugin.stop());
     }
 
 }
