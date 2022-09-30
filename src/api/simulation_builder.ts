@@ -52,9 +52,9 @@ export class SimulationBuilder
         return this;
     }
 
-    public withDebugRenderer(): SimulationBuilder
+    public withDebugRenderer(elementToAddCanvas?: HTMLElement): SimulationBuilder
     {
-        this._plugins.push(new RendererPlugin());
+        this._plugins.push(new RendererPlugin(elementToAddCanvas));
         return this;
     }
 

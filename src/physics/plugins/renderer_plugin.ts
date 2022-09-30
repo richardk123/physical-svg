@@ -5,6 +5,12 @@ import {Engine, Render, Body} from "matter-js";
 export class RendererPlugin implements PhysicsPlugin
 {
     private _renderer: Render | undefined;
+    private _elementToAddCanvas: HTMLElement | undefined;
+
+    constructor(elementToAddCanvas: HTMLElement | undefined)
+    {
+        this._elementToAddCanvas = elementToAddCanvas;
+    }
 
     setup(svgData: SvgData, physEngine: Engine, rootBodies: Body[]): void
     {
@@ -13,6 +19,11 @@ export class RendererPlugin implements PhysicsPlugin
         if (svgData.svg.parentElement != null)
         {
             renderElement = svgData.svg.parentElement;
+        }
+
+        if (this._elementToAddCanvas !== undefined)
+        {
+            renderElement = this._elementToAddCanvas;
         }
 
         // create renderer
