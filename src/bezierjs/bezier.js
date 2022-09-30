@@ -1,3 +1,5 @@
+/* tslint:disable */
+
 // math-inlining.
 const { abs, cos, sin, acos, atan2, sqrt, pow } = Math;
 
