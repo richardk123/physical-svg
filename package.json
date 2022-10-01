@@ -1,6 +1,6 @@
 {
   "name": "physical-svg",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Library to animate svg image path based on 2d physics",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -43,7 +43,9 @@
   "keywords": [
     "svg",
     "physics",
-    "font"
+    "simulation",
+    "logo",
+    "animation"
   ],
   "author": "Richard Kolisek richard.kolisek@gmail.com",
   "license": "ISC",

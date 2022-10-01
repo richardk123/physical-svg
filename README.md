@@ -29,6 +29,15 @@ Demo
 ---
 https://richardk123.github.io/physical-svg-examples/
 
+Limitations
+---
+
+:warning:
+This library only supports path elements <path d="..." >. Please use 3rd party software (inkscape) and transform Object to path (https://bytexd.com/how-to-convert-objects-to-paths-in-inkscape/).
+Also please check if your svg contains transform attribute and apply the transformation to paths (if not the transformation will not be applied to colliders).
+In current version path command A is not implemented and will throw error in log. If the support for A command is needed it can be implemented,
+:warning:
+
 API
 ---
 
