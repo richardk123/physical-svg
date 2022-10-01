@@ -33,8 +33,8 @@ Limitations
 ---
 
 :warning:
-This library only supports path elements <path d="..." >. Please use 3rd party software (inkscape) and transform Object to path (https://bytexd.com/how-to-convert-objects-to-paths-in-inkscape/).
-Also please check if your svg contains transform attribute and apply the transformation to paths (if not the transformation will not be applied to colliders).
+This library only supports path elements <path d="..." >. Please use 3rd party software (inkscape) and transform Object to path (https://bytexd.com/how-to-convert-objects-to-paths-in-inkscape/) if you want the objects to be animated by physics.
+Also please check if your svg element and it's children contains transform attribute and apply the transformation to paths (if not the transformation will not be applied to colliders).
 In current version path command A is not implemented and will throw error in log, but the A command can be avoided using C command in path.
 :warning:
 
