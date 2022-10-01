@@ -60,26 +60,26 @@ Set max speed for all objects in scene. This is useful if colliders are thin and
 
 Set max angular velocity in radians. This is useful if colliders are thin and with high speed they are passing through themselves.
 
-### withBorderCollider(): SimulationBuilder
+### .withBorderCollider(): SimulationBuilder
 
 Create a collider around svg borders.
 
-### withMouseInteraction(mouseForce: number): SimulationBuilder
+### .withMouseInteraction(mouseForce: number): SimulationBuilder
 
 Mouse can interact with physical objects.
 
-### withScrollInteraction(scrollForce: number): SimulationBuilder
+### .withScrollInteraction(scrollForce: number): SimulationBuilder
 
 Force is applied to physical object when scrolling through page.
 
-### withDebugRenderer(elementToAddCanvas?: HTMLElement): SimulationBuilder
+### .withDebugRenderer(elementToAddCanvas?: HTMLElement): SimulationBuilder
 
 Use if you want to see what is going on in physics engine.
 
-### withCustomPlugin(plugin: PhysicsPlugin): SimulationBuilder
+### .withCustomPlugin(plugin: PhysicsPlugin): SimulationBuilder
 
 Your own awesome plugin.
 
-### startSimulation(config: BodyConfig): StopPhysicalSvg
+### .startSimulation(config: BodyConfig): StopPhysicalSvg
 
 start simulation loop and return StopPhysicalSvg
