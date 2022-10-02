@@ -1,4 +1,5 @@
 import {
+    findArcCircuitPoints,
     findCenterOfLine,
     findDistance, findDistanceVec,
     multiplyVec,
@@ -6,6 +7,7 @@ import {
     vectorEquals
 } from "../base/math_utils";
 import {Vector} from "matter-js";
+import {EllipticalArcCommandMadeAbsolute} from "svg-path-parser";
 
 
 test('rotatePoint 90', () =>
@@ -72,4 +74,45 @@ test('vector equals', () =>
 
     expect(equal).toBe(true);
 });
+
+
+
+test('arc circuit points', () =>
+{
+    const points = findArcCircuitPoints(new Arc(10, 10, true, true, 0, 0), 10);
+
+    expect(points.length).toBe(10);
+});
+
+
+class Arc implements EllipticalArcCommandMadeAbsolute
+{
+    code: "A";
+    command: "elliptical arc";
+    largeArc: boolean;
+    relative: false;
+    rx: number;
+    ry: number;
+    sweep: boolean;
+    x: number;
+    x0: number;
+    xAxisRotation: number;
+    y: number;
+    y0: number;
+
+    constructor (rx: number, ry: number, largeArc: boolean, sweep: boolean, x: number, y: number)
+    {
+        this.rx = rx;
+        this.ry = ry;
+        this.largeArc = largeArc;
+        this.sweep = sweep;
+        this.x = x;
+        this.y = y;
+        this.x0 = 0;
+        this.y0 = 0;
+    }
+
+}
+
+
 

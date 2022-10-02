@@ -1,4 +1,5 @@
 import {Vector} from "matter-js";
+import {EllipticalArcCommandMadeAbsolute} from "svg-path-parser";
 
 export const findDistance = (x: number, y: number, x1: number, y1: number): number =>
 {
@@ -58,4 +59,10 @@ export const rotatePointAroundCenterPoint = (cx: number, cy: number, x: number, 
     const nx = (cos * (x - cx)) + (sin * (y - cy)) + cx;
     const ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
     return {x: nx, y: ny};
+}
+
+export const findArcCircuitPoints = (arc: EllipticalArcCommandMadeAbsolute, pointCount: number): {x: number, y: number}[] =>
+{
+    // TODO: implement
+    return [];
 }
