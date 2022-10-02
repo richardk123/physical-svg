@@ -1,7 +1,7 @@
 language: node_js
 cache: npm
 node_js:
-  - "stable"
+  - 9
 
 install:
   - npm ci
