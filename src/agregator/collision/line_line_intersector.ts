@@ -1,7 +1,7 @@
-import {Intersector} from "./Intersector";
 import {Vector} from "matter-js";
 import {multiplyVec} from "../../base/math_utils";
 import {LineCommandType} from "../../base/command_mapper";
+import {Intersector} from "./intersector";
 
 export class LineLineIntersector implements Intersector<LineCommandType, LineCommandType>
 {
