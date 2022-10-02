@@ -3,6 +3,8 @@ physical-svg
 
 Is typescript library for node.js that runs physical simulation on your svg picture in browser. This project uses awesome 2d physic library matterjs and for bezier curves bezier-js.
 
+[![Build Status](https://app.travis-ci.com/richardk123/physical-svg.svg?branch=main)](https://travis-ci.org/liabru/matter-js)
+
 Installation
 ---
 ```

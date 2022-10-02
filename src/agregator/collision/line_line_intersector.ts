@@ -2,7 +2,6 @@ import {Intersector} from "./Intersector";
 import {Vector} from "matter-js";
 import {multiplyVec} from "../../base/math_utils";
 import {LineCommandType} from "../../base/command_mapper";
-import {findLengthOfLineCommand} from "../../base/command_utils";
 
 export class LineLineIntersector implements Intersector<LineCommandType, LineCommandType>
 {

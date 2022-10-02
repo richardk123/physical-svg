@@ -1,4 +1,3 @@
-import {World, Body} from "matter-js";
 import {LineBody} from "./line_body";
 import {PointBody} from "./point_body";
 import {CurveBody} from "./curve_body";
@@ -7,7 +6,6 @@ import {QuadraticCurveBody} from "./quadratic_curve_body";
 import {AllCommandTypes} from "../../base/command_mapper";
 import {CommandBody} from "./command_body";
 import {ClosePathBody} from "./close_path_body";
-import {ArcCommand} from "../../../lib/parser/command";
 
 export const physBodyFactory = (command: AllCommandTypes, colliderSize: number): CommandBody<AllCommandTypes> =>
 {

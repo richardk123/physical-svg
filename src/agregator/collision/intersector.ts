@@ -1,4 +1,3 @@
-import {Command} from "svg-path-parser";
 import {AllCommandTypes} from "../../base/command_mapper";
 
 export interface Intersector<T extends AllCommandTypes, K extends AllCommandTypes>
