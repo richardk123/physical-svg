@@ -7,6 +7,7 @@ import {QuadraticCurveBody} from "./quadratic_curve_body";
 import {AllCommandTypes} from "../../base/command_mapper";
 import {CommandBody} from "./command_body";
 import {ClosePathBody} from "./close_path_body";
+import {ArcCommand} from "../../../lib/parser/command";
 
 export const physBodyFactory = (command: AllCommandTypes, colliderSize: number): CommandBody<AllCommandTypes> =>
 {
@@ -39,6 +40,10 @@ export const physBodyFactory = (command: AllCommandTypes, colliderSize: number):
         case "Z":
         {
             return new ClosePathBody(command);
+        }
+        case "A":
+        {
+            throw new Error("arc command not implemented yet");
         }
     }
 }

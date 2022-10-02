@@ -2,6 +2,7 @@ import {Vector} from "matter-js";
 import {findAngle, findCenterOfLine, findDistanceVec} from "./math_utils";
 import {CurveCommandType, LineCommandType, AllCommandTypes} from "./command_mapper";
 import {Bezier} from "./../bezierjs/bezier.js";
+import {EllipticalArcCommandMadeAbsolute} from "svg-path-parser";
 
 export const findCenterOfCommand = (command: AllCommandTypes): Vector =>
 {
@@ -14,7 +15,13 @@ export const findCenterOfCommand = (command: AllCommandTypes): Vector =>
         case "Q": return findCenterOfCurveCommand(command);
         case "S": return findCenterOfCurveCommand(command);
         case "L": return findCenterOfLineCommand(command);
+        case "A": return findCenterOfArcCommand(command);
     }
+}
+
+export const findCenterOfArcCommand = (command: EllipticalArcCommandMadeAbsolute): Vector =>
+{
+    return findCenterOfLine(Vector.create(command.x, command.y), Vector.create(command.x0, command.y0));
 }
 
 export const findCenterOfCurveCommand = (command: CurveCommandType): Vector =>

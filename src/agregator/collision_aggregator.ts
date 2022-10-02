@@ -9,6 +9,10 @@ import {CurveCurveIntersector} from "./collision/curve_curve_intersector";
 import {CurvePointIntersector} from "./collision/curve_point_intersector";
 import {PointPointIntersector} from "./collision/point_point_intersector";
 import {AllCommandTypes} from "../base/command_mapper";
+import {ArcArcIntersector} from "./collision/arc_arc_intersector";
+import {ArcCurveIntersector} from "./collision/arc_curve_intersector";
+import {ArcLineIntersector} from "./collision/arc_line_intersector";
+import {ArcPointIntersector} from "./collision/arc_point_intersector";
 
 export class CollisionAggregator implements Aggregator
 {
@@ -17,7 +21,8 @@ export class CollisionAggregator implements Aggregator
     constructor()
     {
         this._intersectorRegistry = [new LineLineIntersector(), new LinePointIntersector(),
-            new LineCurveIntersector(), new CurveCurveIntersector(), new CurvePointIntersector(), new PointPointIntersector()];
+            new LineCurveIntersector(), new CurveCurveIntersector(), new CurvePointIntersector(), new PointPointIntersector(),
+            new ArcArcIntersector(), new ArcCurveIntersector(), new ArcLineIntersector(), new ArcPointIntersector()];
     }
 
     // aggregate commands together if they intersect

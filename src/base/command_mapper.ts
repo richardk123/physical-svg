@@ -1,16 +1,14 @@
 import {
     ClosePathCommandMadeAbsolute,
-    Command, CommandMadeAbsolute,
-    CurveToCommandMadeAbsolute,
-    HorizontalLineToCommandMadeAbsolute,
+    CommandMadeAbsolute,
+    CurveToCommandMadeAbsolute, EllipticalArcCommandMadeAbsolute,
     LineToCommandMadeAbsolute, MoveToCommandMadeAbsolute,
     QuadraticCurveToCommandMadeAbsolute,
-    SmoothCurveToCommandMadeAbsolute, SmoothQuadraticCurveToCommandMadeAbsolute,
-    VerticalLineToCommandMadeAbsolute
+    SmoothCurveToCommandMadeAbsolute, SmoothQuadraticCurveToCommandMadeAbsolute
 } from "svg-path-parser";
 import {findLengthOfLineCommand} from "./command_utils";
 
-export type AllCommandTypes = (CurveCommandType | LineCommandType | MoveToCommandMadeAbsolute);
+export type AllCommandTypes = (CurveCommandType | LineCommandType | MoveToCommandMadeAbsolute | EllipticalArcCommandMadeAbsolute);
 
 export type CurveCommandType = (CurveToCommandMadeAbsolute |
     SmoothCurveToCommandMadeAbsolute |
@@ -49,10 +47,6 @@ export const expandCommands = (commands: CommandMadeAbsolute[]): AllCommandTypes
                 case 'V':
                 {
                     return new Line(command.x, command.y, command.x0, command.y0);
-                }
-                case "A":
-                {
-                    throw new Error("A not supported yet");
                 }
                 default:
                 {
